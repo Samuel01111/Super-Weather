@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SuperWeather</string>
+    <string name="placeholder_text_field_search_location">Weather where?</string>
+</resources>
