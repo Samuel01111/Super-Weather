@@ -8,13 +8,29 @@ sealed class WeatherState {
 
     class Submit(
         textLocation: String?,
-        textLocationError: Int? = null
+        textLocationError: Int? = null,
+        weatherData: WeatherData? = null,
+        weatherDataError: Int? = null
     ) : WeatherState() {
         var textLocation by mutableStateOf(textLocation)
         var textLocationError by mutableStateOf(textLocationError)
+        var weatherData by mutableStateOf(weatherData)
+        var weatherDataError by mutableStateOf(weatherDataError)
     }
 
-    /*
+    object Loading : WeatherState()
+    object Error : WeatherState()
+}
+
+data class WeatherData(
+    val location: String,
+    val temperature: String,
+    val condition: String,
+    val high: String,
+    val low: String
+)
+
+/*
     * class Submit(
             userName: String?,
             userNameError: Int? = null,
@@ -31,4 +47,3 @@ sealed class WeatherState {
         var phoneError by mutableStateOf(phoneError)
         var loading by mutableStateOf(false)
     } */
-}
