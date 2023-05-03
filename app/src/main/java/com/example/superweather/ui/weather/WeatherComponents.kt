@@ -101,7 +101,7 @@ fun WeatherContainer() {
         )
 
         Text(
-            modifier = Modifier.padding(vertical = 12.dp),
+            modifier = Modifier.padding(vertical = 8.dp),
             fontSize = 72.sp,
             text = "18"
         )
