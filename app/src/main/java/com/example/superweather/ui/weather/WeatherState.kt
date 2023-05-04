@@ -9,7 +9,7 @@ sealed class WeatherState {
     class Submit(
         textLocation: String?,
         textLocationError: Int? = null,
-        weatherData: WeatherData? = null,
+        weatherData: WeatherData,
         weatherDataError: Int? = null
     ) : WeatherState() {
         var textLocation by mutableStateOf(textLocation)

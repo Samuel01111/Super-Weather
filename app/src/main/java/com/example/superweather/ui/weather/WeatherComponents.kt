@@ -17,6 +17,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,7 +38,7 @@ fun WeatherScreen(
     backgroundImage: Int
 ) {
     val painter = painterResource(id = backgroundImage)
-    val stateValue = remember(weatherState.textLocation) { mutableStateOf(weatherState.textLocation) }
+    val stateValue by remember(weatherState) { mutableStateOf(weatherState) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -56,7 +57,9 @@ fun WeatherScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                WeatherContainer()
+                WeatherContainer(
+                    weatherData = stateValue.weatherData
+                )
 
                 TextField(
                     modifier = Modifier
@@ -65,10 +68,10 @@ fun WeatherScreen(
                         .padding(16.dp)
                         .wrapContentHeight(align = CenterVertically)
                         .background(Color.White),
-                    value = weatherState.textLocation ?: "",
+                    value = stateValue.textLocation ?: "",
                     placeholder = { stringResource(id = R.string.placeholder_text_field_search_location) },
                     onValueChange = {
-                        weatherState.textLocation = it
+                        stateValue.textLocation = it
                     }
                 )
 
@@ -78,7 +81,8 @@ fun WeatherScreen(
                         .padding(horizontal = 16.dp)
                         .wrapContentHeight(align = CenterVertically),
                     onClick = {
-                        weatherState.textLocation = null
+                        stateValue.textLocation = null
+                        stateValue.textLocationError = null
                     }
                 ) {
                     Text(text = "Search")
@@ -88,7 +92,9 @@ fun WeatherScreen(
     )
 }
 @Composable
-fun WeatherContainer() {
+fun WeatherContainer(
+    weatherData: WeatherData
+) {
     Column(
         Modifier
             .background(Color.Transparent),
@@ -97,24 +103,24 @@ fun WeatherContainer() {
     ) {
         Text(
             fontSize = 32.sp,
-            text = "Sao Paulo"
+            text = weatherData.high
         )
 
         Text(
             modifier = Modifier.padding(vertical = 8.dp),
             fontSize = 72.sp,
-            text = "18"
+            text = weatherData.temperature
         )
 
         Text(
             modifier = Modifier.padding(vertical = 4.dp),
             fontSize = 24.sp,
-            text = "Mostly Cloudy"
+            text = weatherData.condition
         )
 
         Row {
-            Text(text = "H:26")
-            Text(text = "L:13")
+            Text(text = "H:" + weatherData.high)
+            Text(text = "L:" + weatherData.low)
         }
     }
 }
