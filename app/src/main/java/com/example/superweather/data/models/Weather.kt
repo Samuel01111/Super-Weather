@@ -2,7 +2,6 @@ package com.example.superweather.data.models
 
 data class Weather(
     val id: Long,
-    val title: String,
     val location: String,
     val temperature: String,
     val condition: String,

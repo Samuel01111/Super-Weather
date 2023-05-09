@@ -2,6 +2,7 @@ package com.example.superweather.di
 
 import android.content.Context
 import com.example.superweather.data.db.di.AppDataBaseModule
+import com.example.superweather.data.repository.di.NetworkModule
 import com.example.superweather.ui.di.MainComponent
 import dagger.BindsInstance
 import dagger.Component
@@ -13,7 +14,8 @@ import javax.inject.Singleton
     DataSourceModule::class,
     AppDataBaseModule::class,
     ViewModelBuilderModule::class,
-    SubcomponentsModule::class
+    SubcomponentsModule::class,
+    NetworkModule::class
 ])
 interface ApplicationComponent {
 

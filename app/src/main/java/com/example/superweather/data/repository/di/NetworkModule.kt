@@ -1,7 +1,6 @@
 package com.example.superweather.data.repository.di
 
-import com.example.superweather.data.keys.API_KEY
-import com.example.superweather.data.repository.WeatherAPI
+import com.example.superweather.data.remote.WeatherApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -13,9 +12,9 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class NetworkModule {
 
     @Provides
-    fun providesRetrofitBuilder(): WeatherAPI {
+    fun providesRetrofitBuilder(): WeatherApi {
         return Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/weather&appid=$API_KEY")
+            .baseUrl("https://api.openweathermap.org/data/")
             .client(
                 OkHttpClient.Builder()
                     .addInterceptor(
@@ -24,7 +23,6 @@ class NetworkModule {
             )
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
-            .create(WeatherAPI::class.java)
+            .create(WeatherApi::class.java)
     }
-
 }

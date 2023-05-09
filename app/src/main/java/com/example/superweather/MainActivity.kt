@@ -9,7 +9,6 @@ import com.example.superweather.ui.MainViewModel
 import com.example.superweather.ui.di.MainComponent
 import com.example.superweather.ui.theme.SuperWeatherTheme
 import com.example.superweather.ui.weather.WeatherScreen
-import com.example.superweather.ui.weather.WeatherState
 import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
@@ -32,11 +31,8 @@ class MainActivity : ComponentActivity() {
             SuperWeatherTheme {
                 WeatherScreen(
                     backgroundImage = R.drawable.clounds,
-                    weatherState = WeatherState.Submit(
-                        textLocation = "OPA",
-                        textLocationError = null,
-                        viewModel.getWeatherData()
-                    )
+                    weatherState = viewModel.state,
+                    submit = { viewModel.fetchWeatherByName(it) }
                 )
             }
         }
@@ -44,7 +40,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-
         mainComponent
             .inject(this)
     }

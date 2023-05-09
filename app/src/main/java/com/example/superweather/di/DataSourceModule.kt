@@ -1,7 +1,7 @@
 package com.example.superweather.di
 
-import com.example.superweather.data.repository.WeatherDatabaseDataBaseDataSource
-import com.example.superweather.data.repository.WeatherDatabaseRepository
+import com.example.superweather.data.repository.WeatherAPIRepository
+import com.example.superweather.data.repository.WeatherAPIRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import javax.inject.Singleton
@@ -11,5 +11,5 @@ abstract class DataSourceModule {
 
     @Singleton
     @Binds
-    abstract fun provideLocalDataSource(weatherDataSourceModule: WeatherDatabaseDataBaseDataSource): WeatherDatabaseRepository
+    abstract fun provideDataSource(weatherAPIRepositoryImpl: WeatherAPIRepositoryImpl): WeatherAPIRepository
 }

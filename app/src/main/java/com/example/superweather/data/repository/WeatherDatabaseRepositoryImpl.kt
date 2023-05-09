@@ -1,12 +1,12 @@
 package com.example.superweather.data.repository
 
 import com.example.superweather.data.db.dao.WeatherDao
-import com.example.superweather.data.db.toWeather
-import com.example.superweather.data.db.toWeatherEntity
+import com.example.superweather.data.mapper.toWeather
+import com.example.superweather.data.mapper.toWeatherEntity
 import com.example.superweather.data.models.Weather
 import javax.inject.Inject
 
-class WeatherDatabaseDataBaseDataSource @Inject constructor(
+class WeatherDatabaseRepositoryImpl @Inject constructor(
     private val dao: WeatherDao
 ): WeatherDatabaseRepository {
     override suspend fun saveWeather(weather: Weather) {
