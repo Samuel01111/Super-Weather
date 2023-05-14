@@ -1,5 +1,6 @@
 package com.example.superweather
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,7 +21,11 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
 
+    @SuppressLint("DiscouragedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val resId = resources.getIdentifier("weather-cloudynight", "raw", packageName)
+
         mainComponent = (applicationContext as WeatherApplication)
             .appComponent
             .mainComponent()
@@ -32,7 +37,8 @@ class MainActivity : ComponentActivity() {
                 WeatherScreen(
                     backgroundImage = R.drawable.clounds,
                     weatherState = viewModel.state,
-                    submit = { viewModel.fetchWeatherByName(it) }
+                    submit = { viewModel.fetchWeatherByName(it) },
+                    resId = resId
                 )
             }
         }
