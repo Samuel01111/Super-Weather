@@ -82,12 +82,14 @@ class MainActivity : ComponentActivity() {
                 HomeScreen(
                     backgroundImage = R.drawable.clounds,
                     weatherState = viewModel.state,
-                    submit = { viewModel.fetchWeatherByName(it) },
                     resId = 1
                 )
             }
             composable(BottomNavItem.Search.screen_route) {
-                SearchScreen()
+                SearchScreen(
+                    weatherState = viewModel.state,
+                    submit = { viewModel.fetchWeatherByName(it) }
+                )
             }
             composable(BottomNavItem.Weathers.screen_route) {
                 WeathersScreen()

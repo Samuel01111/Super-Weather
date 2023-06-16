@@ -12,3 +12,5 @@ fun getEmptyWeather(): Weather {
         ""
     )
 }
+
+
