@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
@@ -24,7 +27,6 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants.IterateForever
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.superweather.ui.weather.LottieAnimationIterations
-import com.example.superweather.ui.weather.WeatherDetailsViewEntity
 import com.example.superweather.ui.weather.WeatherRowViewEntity
 
 @Composable
@@ -38,29 +40,39 @@ fun WeatherRow(
             modifier = Modifier
                 .background(weatherRowViewEntity.backgroundColor, RoundedCornerShape(16))
                 .fillMaxWidth()
-                .padding(32.dp)
-                .height(72.dp),
+                .padding(22.dp)
+                .height(120.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column {
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
                 Text(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f),
                     text = it.location,
                     fontWeight = FontWeight.Normal,
                     color = Color.White,
-                    fontSize = 26.sp
+                    fontSize = 22.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 Text(
                     text = it.temperature,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
-                    fontSize = 30.sp
+                    fontSize = 55.sp
                 )
             }
 
             LottieAnimation(
-                modifier = Modifier.size(140.dp),
-                composition =  animatedComposition,
+                modifier = Modifier
+                    .size(100.dp)
+                    .defaultMinSize(minWidth = 100.dp)
+                    .padding(horizontal = 16.dp)
+                ,composition =  animatedComposition,
                 iterations = localLottieIterations.current.iterations,
                 contentScale = ContentScale.Crop
             )
@@ -69,7 +81,9 @@ fun WeatherRow(
 }
 
 @Composable
-fun WeatherDetailsComponent(weather: WeatherDetailsViewEntity) {
+fun WeatherDetailsComponent(
+    //weather: WeatherDetailsViewEntity
+) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(32.dp)
@@ -80,7 +94,7 @@ fun WeatherDetailsComponent(weather: WeatherDetailsViewEntity) {
         ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        WeatherDetailsColumnComponent(weather.title, weather.value, weather.icon)
+        //WeatherDetailsColumnComponent(weather.title, weather.value, weather.icon)
     }
 }
 

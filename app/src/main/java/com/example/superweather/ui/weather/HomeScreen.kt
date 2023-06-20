@@ -2,6 +2,7 @@ package com.example.superweather.ui.weather
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -60,7 +61,7 @@ fun HomeScreen(
                 }
             } else {
                 Column(
-                    modifier = Modifier.padding(bottom = 180.dp),
+                    modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -105,9 +106,16 @@ fun HomeScreen(
                         text = weatherState.weatherInfo.condition,
                         color = Color(0xFF, 0xFF, 0xFF, 0xFF)
                     )
-                    //Todo: Map The Data from API and show it
-                    WeatherDetailsComponent()
 
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(bottom = 50.dp),
+                        verticalArrangement = Arrangement.Bottom
+                    ) {
+                        WeatherDetailsComponent()
+                    }
+                    //Todo: Map The Data from API and show it
                 }
             }
         }
