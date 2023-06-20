@@ -13,7 +13,7 @@ interface WeatherApi {
 
     @GET("2.5/weather?units=metric&appid=$API_KEY")
     suspend fun getWeatherData(
-        @Query("latitude") lat: String,
-        @Query("longitude") long: String,
+        @Query("lat") lat: Double,
+        @Query("lon") long: Double,
     ) : WeatherDataDTO
 }

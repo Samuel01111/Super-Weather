@@ -1,14 +1,19 @@
 package com.example.superweather
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
@@ -19,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -33,10 +38,16 @@ import com.example.superweather.ui.navigation.BottomNavItem
 import com.example.superweather.ui.theme.SuperWeatherTheme
 import com.example.superweather.ui.weather.HomeScreen
 import com.example.superweather.ui.weather.SearchScreen
-import com.example.superweather.ui.weather.SettingsScreen
 import com.example.superweather.ui.weather.WeathersScreen
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import permissions.dispatcher.NeedsPermission
+import permissions.dispatcher.OnNeverAskAgain
+import permissions.dispatcher.OnPermissionDenied
+import permissions.dispatcher.RuntimePermissions
 import javax.inject.Inject
 
+@RuntimePermissions
 class MainActivity : ComponentActivity() {
 
     private lateinit var mainComponent: MainComponent
@@ -56,11 +67,13 @@ class MainActivity : ComponentActivity() {
             .create()
         
         super.onCreate(savedInstanceState)
+        getLastLocationWithPermissionCheck()
         setContent {
             SuperWeatherTheme {
                 MainScreenView()
             }
         }
+
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -77,7 +90,11 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun NavigationGraph(navController: NavHostController) {
-        NavHost(navController, startDestination = BottomNavItem.Home.screen_route) {
+        NavHost(
+            modifier = Modifier.background(Color(9, 21, 61, 255)),
+            navController = navController,
+            startDestination = BottomNavItem.Home.screen_route
+        ) {
             composable(BottomNavItem.Home.screen_route) {
                 HomeScreen(
                     backgroundImage = R.drawable.clounds,
@@ -94,9 +111,6 @@ class MainActivity : ComponentActivity() {
             composable(BottomNavItem.Weathers.screen_route) {
                 WeathersScreen()
             }
-            composable(BottomNavItem.Settings.screen_route) {
-                SettingsScreen()
-            }
         }
     }
 
@@ -105,26 +119,31 @@ class MainActivity : ComponentActivity() {
         val items = listOf(
             BottomNavItem.Home,
             BottomNavItem.Search,
-            BottomNavItem.Weathers,
-            BottomNavItem.Settings
+            BottomNavItem.Weathers
         )
         BottomAppBar(
             modifier = Modifier
-                .background(colorResource(id = R.color.teal_200)),
+                .background(colorResource(id = R.color.teal_200))
+                .height(64.dp),
             contentColor = Color.Black
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
             items.forEach { item ->
                 NavigationBarItem(
-                    icon = { Icon(painterResource(id = item.icon), contentDescription = item.title) },
-                    label = { Text(text = item.title,
-                        fontSize = 9.sp) },
+                    icon = { Icon(
+                        modifier = Modifier
+                            .size(28.dp)
+                            .padding(bottom = 4.dp),
+                        painter = painterResource(id = item.icon),
+                        contentDescription = item.title,
+                        tint = MaterialTheme.colorScheme.secondary
+                    ) },
+                    label = { Text(text = "")},
                     alwaysShowLabel = true,
                     selected = currentRoute == item.screen_route,
                     onClick = {
                         navController.navigate(item.screen_route) {
-
                             navController.graph.startDestinationRoute?.let { screen_route ->
                                 popUpTo(screen_route) {
                                     saveState = true
@@ -141,6 +160,29 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+    fun getLastLocation() {
+        val fusedLocationClient: FusedLocationProviderClient = LocationServices
+            .getFusedLocationProviderClient(this)
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: android.location.Location? ->
+                if (location != null) {
+                    viewModel.selectLocation(location.latitude, location.longitude)
+                }
+            }
+    }
+
+    @OnPermissionDenied(Manifest.permission.ACCESS_COARSE_LOCATION)
+    fun onGetLastLocationDenied() {
+        //Show Dialog
+    }
+
+    @OnNeverAskAgain(Manifest.permission.ACCESS_COARSE_LOCATION)
+    fun onLastLocationNeverAskAgain() {
+
     }
 
     override fun onAttachedToWindow() {

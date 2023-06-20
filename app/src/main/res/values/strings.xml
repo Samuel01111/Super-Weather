@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">SuperWeather</string>
-    <string name="placeholder_text_field_search_location">Weather where?</string>
+    <string name="placeholder_text_field_search_location">Search for a state or city</string>
+    <string name="search_icon_content_description">Icone de busca</string>
 </resources>
