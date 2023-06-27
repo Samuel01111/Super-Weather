@@ -13,6 +13,7 @@ import com.example.superweather.data.models.Weather
 import com.example.superweather.data.repository.WeatherAPIRepository
 import com.example.superweather.data.utils.Resource
 import com.example.superweather.data.utils.getEmptyWeather
+import com.example.superweather.ui.weather.WeatherDetailsViewEntity
 import com.example.superweather.ui.weather.WeatherRowViewEntity
 import com.example.superweather.ui.weather.WeatherState
 import kotlinx.coroutines.launch
@@ -40,7 +41,7 @@ class MainViewModel @Inject constructor(
                 is Resource.Success -> {
                     state = state.copy(
                         weatherInfo = resource.data,
-                        isLoading = true,
+                        isLoading = false,
                         error = null,
                         date = getLocalDateTime(),
                         weatherRowViewEntity = getWeatherRowViewEntity(resource.data)
@@ -87,7 +88,28 @@ class MainViewModel @Inject constructor(
             location = weatherInfo.location,
             temperature = weatherInfo.temperature,
             icon = getIconByCondition(weatherInfo.condition),
-            backgroundColor = getBackgroundColorByCondition(weatherInfo.condition)
+            backgroundColor = getBackgroundColorByCondition(weatherInfo.condition),
+            weatherItems = getWeatherDetailsItems(weatherInfo)
+        )
+    }
+
+    private fun getWeatherDetailsItems(weatherInfo: Weather): List<WeatherDetailsViewEntity> {
+        return listOf(
+            WeatherDetailsViewEntity(
+                title = "Huminity",
+                value = weatherInfo.humidity ?: "",
+                icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_humidity),
+            ),
+            WeatherDetailsViewEntity(
+                title = "Huminity",
+                value = weatherInfo.pressure ?: "",
+                icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_pressure),
+            ),
+            WeatherDetailsViewEntity(
+                title = "Wind",
+                value = weatherInfo.speed ?: "",
+                icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_speed),
+            )
         )
     }
 

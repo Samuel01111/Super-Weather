@@ -11,5 +11,9 @@ data class WeatherEntity(
     val temperature: String,
     val condition: String,
     val high: String,
-    val low: String
+    val low: String,
+    val humidity: String?,
+    val pressure: String?,
+    val speed: String?,
+    val deg: String?
 )

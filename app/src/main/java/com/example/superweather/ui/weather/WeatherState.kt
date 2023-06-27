@@ -11,11 +11,13 @@ data class WeatherState(
     val date: String? = null,
     val weatherRowViewEntity: WeatherRowViewEntity? = null
 )
+
 data class WeatherRowViewEntity(
     val location: String,
     val temperature: String,
     val icon: LottieCompositionSpec.RawRes,
-    val backgroundColor: Color
+    val backgroundColor: Color,
+    val weatherItems: List<WeatherDetailsViewEntity>
 )
 
 data class WeatherDetailsViewEntity(

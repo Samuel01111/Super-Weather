@@ -9,8 +9,10 @@ fun getEmptyWeather(): Weather {
         "",
         "",
         "",
+        "",
+        "",
+        "",
+        "",
         ""
     )
 }
-
-

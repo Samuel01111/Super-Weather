@@ -10,5 +10,7 @@ data class WeatherDataDTO(
     @field:Json(name = "main")
     val weatherValues: WeatherValues,
     @field:Json(name = "sys")
-    val weatherSys: WeatherSystem
+    val weatherSys: WeatherSystem,
+    @field:Json(name = "wind")
+    val wind: WeatherWind
 )

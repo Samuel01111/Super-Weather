@@ -1,6 +1,7 @@
 package com.example.superweather.ui.weather.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +30,7 @@ import com.airbnb.lottie.compose.LottieConstants.IterateForever
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.superweather.ui.weather.LottieAnimationIterations
 import com.example.superweather.ui.weather.WeatherRowViewEntity
+import com.example.superweather.ui.weather.WeatherState
 
 @Composable
 fun WeatherRow(
@@ -82,19 +85,22 @@ fun WeatherRow(
 
 @Composable
 fun WeatherDetailsComponent(
-    //weather: WeatherDetailsViewEntity
+    weather: WeatherState
 ) {
     Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(32.dp)
-        .height(72.dp)
+        .horizontalScroll(rememberScrollState())
+        .fillMaxWidth(1.0f)
+        .padding(16.dp)
+        .height(100.dp)
         .background(
             color = Color(0, 0, 0, 60),
             shape = RoundedCornerShape(16)
         ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        //WeatherDetailsColumnComponent(weather.title, weather.value, weather.icon)
+        weather.weatherRowViewEntity?.weatherItems?.forEach {
+            WeatherDetailsColumnComponent(it.title, it.value, it.icon)
+        }
     }
 }
 
@@ -102,7 +108,7 @@ fun WeatherDetailsComponent(
 fun WeatherDetailsColumnComponent(title: String, value: String, icon: LottieCompositionSpec.RawRes) {
     Column(modifier = Modifier
         .fillMaxWidth()
-        .height(52.dp)
+        .height(80.dp)
     ) {
         val animatedComposition by rememberLottieComposition(icon)
         val localLottieIterations = compositionLocalOf { LottieAnimationIterations(IterateForever) }

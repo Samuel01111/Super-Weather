@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
@@ -62,7 +63,7 @@ fun HomeScreen(
             } else {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     weatherState.date?.let {
@@ -109,13 +110,11 @@ fun HomeScreen(
 
                     Column(
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(bottom = 50.dp),
+                            .fillMaxWidth(),
                         verticalArrangement = Arrangement.Bottom
                     ) {
-                        WeatherDetailsComponent()
+                        WeatherDetailsComponent(weatherState)
                     }
-                    //Todo: Map The Data from API and show it
                 }
             }
         }

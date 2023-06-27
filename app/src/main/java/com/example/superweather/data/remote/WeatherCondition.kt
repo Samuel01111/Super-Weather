@@ -6,5 +6,5 @@ data class WeatherCondition(
     @field:Json(name = "main")
     val condition: String,
     val description: String,
-    val icon: String
+    val icon: String,
 )

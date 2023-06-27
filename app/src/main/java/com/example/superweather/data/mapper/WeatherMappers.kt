@@ -3,7 +3,10 @@ package com.example.superweather.data.mapper
 import com.example.superweather.data.db.WeatherEntity
 import com.example.superweather.data.models.Weather
 import com.example.superweather.data.remote.WeatherDataDTO
+import com.example.superweather.data.utils.ToVelocity
 import com.example.superweather.data.utils.toDegrees
+import com.example.superweather.data.utils.toPercentage
+import com.example.superweather.data.utils.toPressure
 
 fun Weather.toWeatherEntity(id: Int = 0): WeatherEntity {
     return with(this) {
@@ -13,7 +16,11 @@ fun Weather.toWeatherEntity(id: Int = 0): WeatherEntity {
             temperature = temperature,
             condition = condition,
             high = high,
-            low = low
+            low = low,
+            humidity = humidity,
+            pressure = pressure,
+            speed = speed,
+            deg = deg
         )
     }
 }
@@ -26,7 +33,11 @@ fun WeatherEntity.toWeather(id: Int = 0): Weather {
             temperature = temperature,
             condition = condition,
             high = high,
-            low = low
+            low = low,
+            humidity = humidity,
+            pressure = pressure,
+            speed = speed,
+            deg = deg
         )
     }
 }
@@ -39,7 +50,11 @@ fun Array<WeatherEntity>.toWeatherEntity(): List<Weather> {
             temperature = it.temperature,
             condition = it.condition,
             high = it.high,
-            low = it.low
+            low = it.low,
+            humidity = it.humidity,
+            pressure = it.pressure,
+            speed = it.speed,
+            deg = it.deg
         )
     }
 }
@@ -52,7 +67,11 @@ fun WeatherDataDTO.toWeather() : Weather {
             temperature = this.weatherValues.temperature.toInt().toString().toDegrees(),
             condition = this.weatherCondition[0].condition,
             high = this.weatherValues.maxTemp.toInt().toString().toDegrees(),
-            low = this.weatherValues.minTemp.toInt().toString().toDegrees()
+            low = this.weatherValues.minTemp.toInt().toString().toDegrees(),
+            humidity = this.weatherValues.humidity.toString().toPercentage(),
+            pressure = this.weatherValues.pressure.toString().toPressure(),
+            speed = this.wind.speed.toString().ToVelocity(),
+            deg = this.wind.deg.toString()
         )
     }
 }
