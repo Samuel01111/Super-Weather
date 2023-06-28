@@ -39,7 +39,7 @@ fun SearchTextField(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(82.dp)
+            .height(90.dp)
             .padding(bottom = 32.dp)
             .background(Color.White, RoundedCornerShape(4))
     ) {
@@ -60,9 +60,11 @@ fun SearchTextField(
                 Text(text = stringResource(id = R.string.placeholder_text_field_search_location))
             },
             colors = textFieldColors(
+                textColor = Color.Black,
                 containerColor = Color.White,
                 focusedLeadingIconColor = Color.White,
-                unfocusedLeadingIconColor = Color.White
+                unfocusedLeadingIconColor = Color.White,
+                cursorColor = Color.Black
             )
         )
 

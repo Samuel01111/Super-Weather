@@ -1,6 +1,7 @@
 package com.example.superweather.ui.weather.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -34,17 +36,22 @@ import com.example.superweather.ui.weather.WeatherState
 
 @Composable
 fun WeatherRow(
-    weatherRowViewEntity: WeatherRowViewEntity?,
+    viewEntity: WeatherRowViewEntity?,
+    onItemClicked: () -> Unit
 ) {
-    weatherRowViewEntity?.let {
+    viewEntity?.let {
         val animatedComposition by rememberLottieComposition(it.icon)
         val localLottieIterations = compositionLocalOf { LottieAnimationIterations(IterateForever) }
+
         Row(
             modifier = Modifier
-                .background(weatherRowViewEntity.backgroundColor, RoundedCornerShape(16))
+                .background(viewEntity.backgroundColor, RoundedCornerShape(16))
                 .fillMaxWidth()
                 .padding(22.dp)
-                .height(120.dp),
+                .height(120.dp)
+                .clickable {
+                    onItemClicked()
+                },
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
@@ -74,10 +81,11 @@ fun WeatherRow(
                 modifier = Modifier
                     .size(100.dp)
                     .defaultMinSize(minWidth = 100.dp)
-                    .padding(horizontal = 16.dp)
-                ,composition =  animatedComposition,
+                    .padding(horizontal = 16.dp),
+                composition =  animatedComposition,
                 iterations = localLottieIterations.current.iterations,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                outlineMasksAndMattes = true
             )
         }
     }
@@ -88,17 +96,16 @@ fun WeatherDetailsComponent(
     weather: WeatherState
 ) {
     Row(modifier = Modifier
+        .fillMaxWidth()
+        .height(140.dp)
         .horizontalScroll(rememberScrollState())
-        .fillMaxWidth(1.0f)
-        .padding(16.dp)
-        .height(100.dp)
         .background(
-            color = Color(0, 0, 0, 60),
+            color = Color(0, 0, 0, 70),
             shape = RoundedCornerShape(16)
         ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        weather.weatherRowViewEntity?.weatherItems?.forEach {
+        weather.weatherItems?.forEach {
             WeatherDetailsColumnComponent(it.title, it.value, it.icon)
         }
     }
@@ -107,20 +114,24 @@ fun WeatherDetailsComponent(
 @Composable
 fun WeatherDetailsColumnComponent(title: String, value: String, icon: LottieCompositionSpec.RawRes) {
     Column(modifier = Modifier
-        .fillMaxWidth()
-        .height(80.dp)
+        .fillMaxHeight()
+        .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.Center
     ) {
         val animatedComposition by rememberLottieComposition(icon)
         val localLottieIterations = compositionLocalOf { LottieAnimationIterations(IterateForever) }
 
         LottieAnimation(
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier
+                .size(52.dp)
+                .align(Alignment.CenterHorizontally),
             composition =  animatedComposition,
             iterations = localLottieIterations.current.iterations,
             contentScale = ContentScale.Crop
         )
 
         Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
             text = value,
             fontWeight = FontWeight.Normal,
             color = Color.White,
@@ -128,6 +139,7 @@ fun WeatherDetailsColumnComponent(title: String, value: String, icon: LottieComp
         )
 
         Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
             text = title,
             fontWeight = FontWeight.Normal,
             color = Color(255, 255, 255, 90),
@@ -135,38 +147,3 @@ fun WeatherDetailsColumnComponent(title: String, value: String, icon: LottieComp
         )
     }
 }
-
-//@Composable
-//fun HomeScreen(
-//
-//) {
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(colorResource(id = R.color.teal_700))
-//            .wrapContentSize(Alignment.Center)
-//    ) {
-//        Text(
-//            text = "Home Screen",
-//            fontWeight = FontWeight.Bold,
-//            color = Color.White,
-//            modifier = Modifier.align(Alignment.CenterHorizontally),
-//            textAlign = TextAlign.Center,
-//            fontSize = 20.sp
-//        )
-//    }
-//}
-
-/*Button(modifier = Modifier
-                    .border(BorderStroke(1.dp, Color.Red), shape = RoundedCornerShape(100))
-                    .size(40.dp),
-                    onClick = { /*Open Screen*/ }
-                ) {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        shape = RoundedCornerShape(100),
-                        color = Color(107, 24, 24, 60)
-                    ) {
-
-                    }
-                }*/

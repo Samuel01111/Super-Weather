@@ -37,7 +37,7 @@ class MainViewModel @Inject constructor(
 
     fun fetchWeatherByName(cityName: String) {
         viewModelScope.launch {
-            when(val resource = repository.getWeatherByName(cityName)) {
+            when(val resource = repository.getWeatherByName(cityName.trim())) {
                 is Resource.Success -> {
                     state = state.copy(
                         weatherInfo = resource.data,
@@ -68,7 +68,8 @@ class MainViewModel @Inject constructor(
                         isLoading = false,
                         error = null,
                         date = getLocalDateTime(),
-                        weatherRowViewEntity = getWeatherRowViewEntity(resource.data)
+                        weatherRowViewEntity = getWeatherRowViewEntity(resource.data),
+                        weatherItems = getWeatherDetailsItems(resource.data)
                     )
                     Log.d("@@@", state.toString())
                 }
@@ -88,8 +89,7 @@ class MainViewModel @Inject constructor(
             location = weatherInfo.location,
             temperature = weatherInfo.temperature,
             icon = getIconByCondition(weatherInfo.condition),
-            backgroundColor = getBackgroundColorByCondition(weatherInfo.condition),
-            weatherItems = getWeatherDetailsItems(weatherInfo)
+            backgroundColor = getBackgroundColorByCondition(weatherInfo.condition)
         )
     }
 
@@ -101,7 +101,7 @@ class MainViewModel @Inject constructor(
                 icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_humidity),
             ),
             WeatherDetailsViewEntity(
-                title = "Huminity",
+                title = "Pressure",
                 value = weatherInfo.pressure ?: "",
                 icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_pressure),
             ),

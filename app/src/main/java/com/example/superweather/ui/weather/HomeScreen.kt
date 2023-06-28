@@ -2,6 +2,7 @@ package com.example.superweather.ui.weather
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -108,13 +109,16 @@ fun HomeScreen(
                         color = Color(0xFF, 0xFF, 0xFF, 0xFF)
                     )
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalArrangement = Arrangement.Bottom
-                    ) {
-                        WeatherDetailsComponent(weatherState)
-                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 80.dp, horizontal = 16.dp),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    WeatherDetailsComponent(weatherState)
                 }
             }
         }

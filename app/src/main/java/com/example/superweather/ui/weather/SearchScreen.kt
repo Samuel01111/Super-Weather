@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,11 +24,11 @@ import androidx.compose.ui.unit.sp
 import com.example.superweather.ui.weather.components.SearchTextField
 import com.example.superweather.ui.weather.components.WeatherRow
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     weatherState: WeatherState,
     submit: (String) -> Unit,
+    onItemClicked: () -> Unit,
 ) {
     var stateLocationValue by remember(weatherState.weatherInfo.location) { mutableStateOf(weatherState.weatherInfo.location) }
 
@@ -70,7 +69,24 @@ fun SearchScreen(
                 )
 
                 WeatherRow(
-                    weatherState.weatherRowViewEntity
+                    viewEntity = weatherState.weatherRowViewEntity,
+                    onItemClicked = { onItemClicked() }
+                )
+
+                Text(
+                    text = "Current",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Start)
+                        .padding(bottom = 6.dp, top = 16.dp),
+                    textAlign = TextAlign.Center,
+                    fontSize = 28.sp
+                )
+                //TODO: When click at this row, show up a bottom sheet with the current Weather Location.
+                WeatherRow(
+                    viewEntity = weatherState.weatherRowViewEntity,
+                    onItemClicked = { onItemClicked() }
                 )
             }
         }

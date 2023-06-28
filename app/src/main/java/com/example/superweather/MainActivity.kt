@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -91,7 +92,9 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun NavigationGraph(navController: NavHostController) {
         NavHost(
-            modifier = Modifier.background(Color(9, 21, 61, 255)),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(9, 21, 61, 255)),
             navController = navController,
             startDestination = BottomNavItem.Home.screen_route
         ) {
@@ -105,7 +108,8 @@ class MainActivity : ComponentActivity() {
             composable(BottomNavItem.Search.screen_route) {
                 SearchScreen(
                     weatherState = viewModel.state,
-                    submit = { viewModel.fetchWeatherByName(it) }
+                    submit = { viewModel.fetchWeatherByName(it) },
+                    onItemClicked = { navController.navigate(BottomNavItem.Home.screen_route) }
                 )
             }
             composable(BottomNavItem.Weathers.screen_route) {
