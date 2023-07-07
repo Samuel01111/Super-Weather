@@ -13,6 +13,7 @@ import com.example.superweather.data.models.Weather
 import com.example.superweather.data.repository.WeatherAPIRepository
 import com.example.superweather.data.utils.Resource
 import com.example.superweather.data.utils.getEmptyWeather
+import com.example.superweather.domain.location.LocationTracker
 import com.example.superweather.ui.weather.WeatherDetailsViewEntity
 import com.example.superweather.ui.weather.WeatherRowViewEntity
 import com.example.superweather.ui.weather.WeatherState
@@ -21,7 +22,8 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    val repository: WeatherAPIRepository
+    val repository: WeatherAPIRepository,
+    private val locationTracker: LocationTracker
 ) : ViewModel() {
 
     var state by mutableStateOf(WeatherState(getEmptyWeather()))
@@ -59,27 +61,34 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun fetchWeatherByLocalization(latitude: Double, longitude: Double) {
+    fun fetchWeatherByLocalization() {
         viewModelScope.launch {
-            when(val resource = repository.getWeatherByLocalization(latitude, longitude)) {
-                is Resource.Success -> {
-                    state = state.copy(
-                        weatherInfo = resource.data,
-                        isLoading = false,
-                        error = null,
-                        date = getLocalDateTime(),
-                        weatherRowViewEntity = getWeatherRowViewEntity(resource.data),
-                        weatherItems = getWeatherDetailsItems(resource.data)
-                    )
-                    Log.d("@@@", state.toString())
+            locationTracker.getCurrentLocation()?.let {
+                when(val resource = repository.getWeatherByLocalization(it.latitude, it.longitude)) {
+                    is Resource.Success -> {
+                        state = state.copy(
+                            weatherInfo = resource.data,
+                            isLoading = false,
+                            error = null,
+                            date = getLocalDateTime(),
+                            weatherRowViewEntity = getWeatherRowViewEntity(resource.data),
+                            weatherItems = getWeatherDetailsItems(resource.data)
+                        )
+                        Log.d("@@@", state.toString())
+                    }
+                    is Resource.Error -> {
+                        state = state.copy(
+                            weatherInfo = getEmptyWeather(),
+                            isLoading = false,
+                            error = resource.message
+                        )
+                    }
                 }
-                is Resource.Error -> {
-                    state = state.copy(
-                        weatherInfo = getEmptyWeather(),
-                        isLoading = false,
-                        error = resource.message
-                    )
-                }
+            } ?: kotlin.run {
+                state = state.copy(
+                    isLoading = false,
+                    error = "Couldn't retrieve location. Make sure to grant permission and enable GPS."
+                )
             }
         }
     }
@@ -94,6 +103,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getWeatherDetailsItems(weatherInfo: Weather): List<WeatherDetailsViewEntity> {
+
         return listOf(
             WeatherDetailsViewEntity(
                 title = "Huminity",
@@ -135,9 +145,5 @@ class MainViewModel @Inject constructor(
             "Clouds" -> LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_clouds)
             else -> { LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_clear) }
         }
-    }
-
-    fun selectLocation(latitude: Double, longitude: Double) {
-        fetchWeatherByLocalization(latitude, longitude)
     }
 }

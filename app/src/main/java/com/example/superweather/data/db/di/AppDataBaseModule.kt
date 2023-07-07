@@ -16,5 +16,4 @@ class AppDataBaseModule {
         val database = AppDatabase.getDatabase(context)
         return database.weatherDao()
     }
-
 }

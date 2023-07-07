@@ -24,6 +24,5 @@ class NetworkModule {
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
             .create(WeatherApi::class.java)
-
     }
 }

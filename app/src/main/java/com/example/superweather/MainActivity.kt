@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,15 +42,8 @@ import com.example.superweather.ui.theme.SuperWeatherTheme
 import com.example.superweather.ui.weather.HomeScreen
 import com.example.superweather.ui.weather.SearchScreen
 import com.example.superweather.ui.weather.WeathersScreen
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import permissions.dispatcher.NeedsPermission
-import permissions.dispatcher.OnNeverAskAgain
-import permissions.dispatcher.OnPermissionDenied
-import permissions.dispatcher.RuntimePermissions
 import javax.inject.Inject
 
-@RuntimePermissions
 class MainActivity : ComponentActivity() {
 
     private lateinit var mainComponent: MainComponent
@@ -57,24 +52,30 @@ class MainActivity : ComponentActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     @SuppressLint("DiscouragedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         val resId = resources.getIdentifier("weather-cloudynight", "raw", packageName)
-
         mainComponent = (applicationContext as WeatherApplication)
             .appComponent
             .mainComponent()
             .create()
-        
         super.onCreate(savedInstanceState)
-        getLastLocationWithPermissionCheck()
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
+            viewModel.fetchWeatherByLocalization()
+        }
+        permissionLauncher.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ))
         setContent {
             SuperWeatherTheme {
                 MainScreenView()
             }
         }
-
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -164,29 +165,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    fun getLastLocation() {
-        val fusedLocationClient: FusedLocationProviderClient = LocationServices
-            .getFusedLocationProviderClient(this)
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: android.location.Location? ->
-                if (location != null) {
-                    viewModel.selectLocation(location.latitude, location.longitude)
-                }
-            }
-    }
-
-    @OnPermissionDenied(Manifest.permission.ACCESS_COARSE_LOCATION)
-    fun onGetLastLocationDenied() {
-        //Show Dialog
-    }
-
-    @OnNeverAskAgain(Manifest.permission.ACCESS_COARSE_LOCATION)
-    fun onLastLocationNeverAskAgain() {
-
     }
 
     override fun onAttachedToWindow() {

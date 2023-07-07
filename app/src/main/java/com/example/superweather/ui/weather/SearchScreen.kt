@@ -55,7 +55,6 @@ fun SearchScreen(
                     textAlign = TextAlign.Center,
                     fontSize = 28.sp
                 )
-
                 SearchTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -67,12 +66,10 @@ fun SearchScreen(
                         submit(stateLocationValue)
                     }
                 )
-
                 WeatherRow(
                     viewEntity = weatherState.weatherRowViewEntity,
                     onItemClicked = { onItemClicked() }
                 )
-
                 Text(
                     text = "Current",
                     fontWeight = FontWeight.Bold,
