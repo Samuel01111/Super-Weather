@@ -3,6 +3,7 @@ package com.example.superweather.ui.weather
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,13 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,18 +25,15 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.superweather.R
+import com.example.superweather.ui.weather.components.LocationPointerAnimation
+import com.example.superweather.ui.weather.components.LottieAnimationIterations
 import com.example.superweather.ui.weather.components.WeatherDetailsComponent
 
 @Composable
 fun HomeScreen(
-    weatherState: WeatherState,
-    backgroundImage: Int,
-    resId: Int
+    weatherState: WeatherState
 ) {
-    val painter = painterResource(id = backgroundImage)
-    val stateValue by remember(weatherState) { mutableStateOf(weatherState) }
     val localLottieIterations = compositionLocalOf { LottieAnimationIterations(LottieConstants.IterateForever) }
-    var stateLocationValue by remember(weatherState.weatherInfo.location) { mutableStateOf(weatherState.weatherInfo.location) }
     val loadingAnimationComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_loading))
 
     Surface(
@@ -76,13 +70,24 @@ fun HomeScreen(
                         )
                     }
 
-                    Text(
-                        modifier = Modifier.padding(top = 10.dp),
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        text = weatherState.weatherInfo.location,
-                        color = Color(0xFF, 0xFF, 0xFF, 0xFF)
-                    )
+                    Row {
+                        Text(
+                            modifier = Modifier.padding(top = 10.dp),
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            text = weatherState.weatherInfo.location,
+                            color = Color(0xFF, 0xFF, 0xFF, 0xFF)
+                        )
+                        if (weatherState.isCurrentLocation) {
+                            LocationPointerAnimation(
+                                Modifier
+                                    .size(50.dp)
+                                    .defaultMinSize(minWidth = 25.dp)
+                                    .padding(top = 4.dp)
+                            )
+                        }
+                    }
+
 
                     weatherState.weatherRowViewEntity?.let {
                         val animatedComposition by rememberLottieComposition(it.icon)
@@ -92,7 +97,6 @@ fun HomeScreen(
                             iterations = localLottieIterations.current.iterations
                         )
                     }
-
                     Text(
                         modifier = Modifier.padding(top = 10.dp),
                         fontSize = 58.sp,
@@ -101,6 +105,22 @@ fun HomeScreen(
                         color = Color(0xFF, 0xFF, 0xFF, 0xFF)
                     )
 
+                    Row {
+                        Text(
+                            modifier = Modifier.padding(top = 10.dp),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            text = "H: " + weatherState.weatherInfo.high,
+                            color = Color(0xFF, 0xFF, 0xFF, 0xFF)
+                        )
+                        Text(
+                            modifier = Modifier.padding(start = 6.dp, top = 10.dp),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            text = "L: " + weatherState.weatherInfo.low,
+                            color = Color(0xFF, 0xFF, 0xFF, 0xFF)
+                        )
+                    }
                     Text(
                         modifier = Modifier.padding(top = 6.dp),
                         fontSize = 20.sp,
@@ -110,7 +130,6 @@ fun HomeScreen(
                     )
 
                 }
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

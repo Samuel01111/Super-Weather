@@ -30,7 +30,6 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants.IterateForever
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.superweather.ui.weather.LottieAnimationIterations
 import com.example.superweather.ui.weather.WeatherRowViewEntity
 import com.example.superweather.ui.weather.WeatherState
 
@@ -45,13 +44,13 @@ fun WeatherRow(
 
         Row(
             modifier = Modifier
+                .clickable {
+                    onItemClicked()
+                }
                 .background(viewEntity.backgroundColor, RoundedCornerShape(16))
                 .fillMaxWidth()
                 .padding(22.dp)
-                .height(120.dp)
-                .clickable {
-                    onItemClicked()
-                },
+                .height(120.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
@@ -76,7 +75,6 @@ fun WeatherRow(
                     fontSize = 55.sp
                 )
             }
-
             LottieAnimation(
                 modifier = Modifier
                     .size(100.dp)
@@ -125,6 +123,7 @@ fun WeatherDetailsColumnComponent(title: String, value: String, icon: LottieComp
             modifier = Modifier
                 .size(52.dp)
                 .align(Alignment.CenterHorizontally),
+            speed = 0.8f,
             composition =  animatedComposition,
             iterations = localLottieIterations.current.iterations,
             contentScale = ContentScale.Crop

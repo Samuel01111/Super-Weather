@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
     @SuppressLint("DiscouragedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
-        val resId = resources.getIdentifier("weather-cloudynight", "raw", packageName)
+        //val resId = resources.getIdentifier("weather-cloudynight", "raw", packageName)
         mainComponent = (applicationContext as WeatherApplication)
             .appComponent
             .mainComponent()
@@ -95,28 +95,40 @@ class MainActivity : ComponentActivity() {
         NavHost(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(9, 21, 61, 255)),
+                .background(Color(21, 153, 247, 255)),
             navController = navController,
             startDestination = BottomNavItem.Home.screen_route
         ) {
             composable(BottomNavItem.Home.screen_route) {
                 HomeScreen(
-                    backgroundImage = R.drawable.clounds,
-                    weatherState = viewModel.state,
-                    resId = 1
+                    weatherState = viewModel.currentHome,
                 )
             }
             composable(BottomNavItem.Search.screen_route) {
                 SearchScreen(
-                    weatherState = viewModel.state,
+                    searchState = viewModel.searchState,
+                    currentLocationState = viewModel.currentLocationState,
                     submit = { viewModel.fetchWeatherByName(it) },
-                    onItemClicked = { navController.navigate(BottomNavItem.Home.screen_route) }
+                    onSearchLocationRowClicked = {
+                        viewModel.onSearchLocationRowClicked()
+                        goToHome(navController)
+                    },
+                    onCurrentLocationRowClicked = {
+                        viewModel.onCurrentLocationRowClicked()
+                        goToHome(navController)
+                    }
                 )
             }
             composable(BottomNavItem.Weathers.screen_route) {
                 WeathersScreen()
             }
         }
+    }
+
+    private fun goToHome(navController: NavHostController) {
+        navController.navigate(
+            route = BottomNavItem.Home.screen_route
+        )
     }
 
     @Composable

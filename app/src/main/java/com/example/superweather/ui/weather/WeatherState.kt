@@ -7,6 +7,7 @@ import com.example.superweather.data.models.Weather
 data class WeatherState(
     val weatherInfo: Weather,
     val isLoading: Boolean = true,
+    val isCurrentLocation: Boolean = false,
     val error: String? = null,
     val date: String? = null,
     val weatherRowViewEntity: WeatherRowViewEntity? = null,

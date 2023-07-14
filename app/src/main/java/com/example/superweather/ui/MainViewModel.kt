@@ -19,39 +19,42 @@ import com.example.superweather.ui.weather.WeatherRowViewEntity
 import com.example.superweather.ui.weather.WeatherState
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
+
 
 class MainViewModel @Inject constructor(
     val repository: WeatherAPIRepository,
     private val locationTracker: LocationTracker
 ) : ViewModel() {
 
-    var state by mutableStateOf(WeatherState(getEmptyWeather()))
+    var currentHome by mutableStateOf(WeatherState(getEmptyWeather()))
         private set
 
-    private fun getLocalDateTime(): String {
-        return LocalDateTime.now().month.toString() +
-                " " +
-                LocalDateTime.now().dayOfMonth.toString() +
-                ", " +
-                LocalDateTime.now().year.toString()
-    }
+    var currentLocationState by mutableStateOf(WeatherState(getEmptyWeather()))
+        private set
+
+    var searchState by mutableStateOf(WeatherState(getEmptyWeather()))
+        private set
 
     fun fetchWeatherByName(cityName: String) {
         viewModelScope.launch {
             when(val resource = repository.getWeatherByName(cityName.trim())) {
                 is Resource.Success -> {
-                    state = state.copy(
+                    searchState = searchState.copy(
                         weatherInfo = resource.data,
                         isLoading = false,
+                        isCurrentLocation = false,
                         error = null,
                         date = getLocalDateTime(),
-                        weatherRowViewEntity = getWeatherRowViewEntity(resource.data)
+                        weatherRowViewEntity = getWeatherRowViewEntity(resource.data),
+                        weatherItems = getWeatherDetailsItems(resource.data)
                     )
-                    Log.d("@@@", state.toString())
+                    currentHome = searchState
                 }
                 is Resource.Error -> {
-                    state = state.copy(
+                    searchState = searchState.copy(
                         weatherInfo = getEmptyWeather(),
                         isLoading = false,
                         error = resource.message
@@ -66,18 +69,20 @@ class MainViewModel @Inject constructor(
             locationTracker.getCurrentLocation()?.let {
                 when(val resource = repository.getWeatherByLocalization(it.latitude, it.longitude)) {
                     is Resource.Success -> {
-                        state = state.copy(
+                        currentLocationState = currentLocationState.copy(
                             weatherInfo = resource.data,
                             isLoading = false,
+                            isCurrentLocation = true,
                             error = null,
                             date = getLocalDateTime(),
                             weatherRowViewEntity = getWeatherRowViewEntity(resource.data),
                             weatherItems = getWeatherDetailsItems(resource.data)
                         )
-                        Log.d("@@@", state.toString())
+                        currentHome = currentLocationState
+                        Log.d("@@@", currentLocationState.toString())
                     }
                     is Resource.Error -> {
-                        state = state.copy(
+                        currentLocationState = currentLocationState.copy(
                             weatherInfo = getEmptyWeather(),
                             isLoading = false,
                             error = resource.message
@@ -85,10 +90,7 @@ class MainViewModel @Inject constructor(
                     }
                 }
             } ?: kotlin.run {
-                state = state.copy(
-                    isLoading = false,
-                    error = "Couldn't retrieve location. Make sure to grant permission and enable GPS."
-                )
+                fetchWeatherByName("osasco")
             }
         }
     }
@@ -103,7 +105,6 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getWeatherDetailsItems(weatherInfo: Weather): List<WeatherDetailsViewEntity> {
-
         return listOf(
             WeatherDetailsViewEntity(
                 title = "Huminity",
@@ -145,5 +146,24 @@ class MainViewModel @Inject constructor(
             "Clouds" -> LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_clouds)
             else -> { LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_clear) }
         }
+    }
+
+    private fun getLocalDateTime(): String {
+        val formatter = DateTimeFormatter.ofPattern("KK:mm a", Locale.ENGLISH)
+        val hours = LocalDateTime.now().format(formatter)
+        return hours +
+                " " +
+                LocalDateTime.now().month.toString() +
+                " " +
+                LocalDateTime.now().dayOfMonth.toString() +
+                ", " +
+                LocalDateTime.now().year.toString()
+    }
+    fun onSearchLocationRowClicked() {
+        currentHome = searchState
+    }
+
+    fun onCurrentLocationRowClicked() {
+        currentHome = currentLocationState
     }
 }

@@ -5,6 +5,7 @@ import com.example.superweather.data.models.Weather
 import com.example.superweather.data.remote.WeatherDataDTO
 import com.example.superweather.data.utils.ToVelocity
 import com.example.superweather.data.utils.toDegrees
+import com.example.superweather.data.utils.toDegreesWithoutPoint
 import com.example.superweather.data.utils.toPercentage
 import com.example.superweather.data.utils.toPressure
 
@@ -66,8 +67,8 @@ fun WeatherDataDTO.toWeather() : Weather {
             location = name,
             temperature = this.weatherValues.temperature.toInt().toString().toDegrees(),
             condition = this.weatherCondition[0].condition,
-            high = this.weatherValues.maxTemp.toInt().toString().toDegrees(),
-            low = this.weatherValues.minTemp.toInt().toString().toDegrees(),
+            high = this.weatherValues.maxTemp.toInt().toString().toDegreesWithoutPoint(),
+            low = this.weatherValues.minTemp.toInt().toString().toDegreesWithoutPoint(),
             humidity = this.weatherValues.humidity.toString().toPercentage(),
             pressure = this.weatherValues.pressure.toString().toPressure(),
             speed = this.wind.speed.toString().ToVelocity(),

@@ -4,6 +4,10 @@ fun String.toDegrees(): String {
     return "$this°C"
 }
 
+fun String.toDegreesWithoutPoint(): String {
+    return "$this°"
+}
+
 fun String.toPercentage(): String {
     return "$this%"
 }
