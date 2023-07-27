@@ -2,7 +2,11 @@ package com.example.superweather
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -28,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -52,25 +57,18 @@ class MainActivity : ComponentActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
+
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     @SuppressLint("DiscouragedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
-        //val resId = resources.getIdentifier("weather-cloudynight", "raw", packageName)
         mainComponent = (applicationContext as WeatherApplication)
             .appComponent
             .mainComponent()
             .create()
         super.onCreate(savedInstanceState)
-        permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) {
-            viewModel.fetchWeatherByLocalization()
-        }
-        permissionLauncher.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ))
+
+        setupPermissionLauncher()
         setContent {
             SuperWeatherTheme {
                 MainScreenView()
@@ -116,7 +114,11 @@ class MainActivity : ComponentActivity() {
                     onCurrentLocationRowClicked = {
                         viewModel.onCurrentLocationRowClicked()
                         goToHome(navController)
-                    }
+                    },
+                    onRequestLocalizationPermissionClicked = {
+                        openSettings()
+                    },
+                    isLocationPermissionActive = viewModel.isLocationPermissionActive
                 )
             }
             composable(BottomNavItem.Weathers.screen_route) {
@@ -179,9 +181,57 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun setupPermissionLauncher() {
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
+            viewModel.fetchWeatherByLocalization()
+        }
+        permissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
+    }
+
+    private fun openSettings() {
+        val intent = Intent(
+            ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", packageName, null),
+
+            )
+        startActivityForResult(intent, REQUEST_CODE_SETTINGS)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_SETTINGS) {
+            val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
+                application,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+            val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
+                application,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+            viewModel.isLocationPermissionActive = hasAccessCoarseLocationPermission || hasAccessFineLocationPermission
+            if (viewModel.isLocationPermissionActive) {
+                viewModel.fetchWeatherByLocalization()
+            }
+        }
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         mainComponent
             .inject(this)
+    }
+
+    companion object {
+        private const val REQUEST_CODE_SETTINGS = 1002
     }
 }

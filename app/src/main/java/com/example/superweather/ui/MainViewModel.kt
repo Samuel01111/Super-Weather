@@ -29,6 +29,8 @@ class MainViewModel @Inject constructor(
     private val locationTracker: LocationTracker
 ) : ViewModel() {
 
+    var isLocationPermissionActive by mutableStateOf(false)
+
     var currentHome by mutableStateOf(WeatherState(getEmptyWeather()))
         private set
 
@@ -67,6 +69,7 @@ class MainViewModel @Inject constructor(
     fun fetchWeatherByLocalization() {
         viewModelScope.launch {
             locationTracker.getCurrentLocation()?.let {
+                isLocationPermissionActive = true
                 when(val resource = repository.getWeatherByLocalization(it.latitude, it.longitude)) {
                     is Resource.Success -> {
                         currentLocationState = currentLocationState.copy(
@@ -90,6 +93,7 @@ class MainViewModel @Inject constructor(
                     }
                 }
             } ?: kotlin.run {
+                isLocationPermissionActive = false
                 fetchWeatherByName("osasco")
             }
         }

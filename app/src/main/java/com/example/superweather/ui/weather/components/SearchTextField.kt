@@ -62,8 +62,8 @@ fun SearchTextField(
             colors = textFieldColors(
                 textColor = Color.Black,
                 containerColor = Color.White,
-                focusedLeadingIconColor = Color.White,
-                unfocusedLeadingIconColor = Color.White,
+                focusedLeadingIconColor = Color.Black,
+                unfocusedLeadingIconColor = Color.Black,
                 cursorColor = Color.Black
             )
         )

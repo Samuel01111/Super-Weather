@@ -1,14 +1,18 @@
 package com.example.superweather.ui.weather
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +41,8 @@ fun SearchScreen(
     submit: (String) -> Unit,
     onSearchLocationRowClicked: () -> Unit,
     onCurrentLocationRowClicked: () -> Unit,
+    onRequestLocalizationPermissionClicked: () -> Unit,
+    isLocationPermissionActive: Boolean
 ) {
     var stateLocationValue by remember(searchState.weatherInfo.location) { mutableStateOf(searchState.weatherInfo.location) }
     val focusManager = LocalFocusManager.current
@@ -55,7 +61,7 @@ fun SearchScreen(
                 horizontalAlignment = CenterHorizontally
             ) {
                 Text(
-                    text = "Weather",
+                    text = "Search",
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     modifier = Modifier
@@ -90,7 +96,7 @@ fun SearchScreen(
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
                             modifier = Modifier
-                                .padding(bottom = 6.dp, top = 16.dp),
+                                .padding(bottom = 6.dp),
                             textAlign = TextAlign.Center,
                             fontSize = 28.sp
                         )
@@ -108,7 +114,45 @@ fun SearchScreen(
                         onItemClicked = { onCurrentLocationRowClicked() }
                     )
                 }
+
+                if (!isLocationPermissionActive) {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    RequestLocationScreen(onRequestLocalizationPermissionClicked)
+                }
             }
         }
     )
+}
+
+@Composable
+fun RequestLocationScreen(
+    onRequestLocalizationPermissionClicked: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .background(
+                Color(36, 29, 29, 50),
+                shape = RoundedCornerShape(12)
+            )
+            .clickable {
+                onRequestLocalizationPermissionClicked()
+            }
+    ) {
+        Text(
+            text = "Location Not Found",
+            fontWeight = FontWeight.Bold,
+            color = Color.Red,
+            modifier = Modifier
+                .padding(bottom = 6.dp, top = 16.dp),
+            textAlign = TextAlign.Center,
+            fontSize = 12.sp
+        )
+        LocationPointerAnimation(
+            Modifier
+                .size(50.dp)
+                .align(Alignment.Bottom)
+                .defaultMinSize(minWidth = 25.dp)
+                .padding(top = 4.dp),
+        )
+    }
 }
