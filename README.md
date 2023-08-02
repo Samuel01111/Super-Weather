@@ -17,11 +17,12 @@ This a Weather app that user can get theirs weather details based on current loc
 
 # Built With 🏗
 
-| Tools | Link |
-|     :---      |          :---: |
-| 🤖   Kotlin | [Kotlin](https://kotlinlang.org/) |
-| 🏛   Architecture Components | [Android Architecture Components](https://developer.android.com/topic/libraries/architecture) |
-| 💉   Dagger Hilt | [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android) |
-| 🌐   Retrofit | [Retrofit](http://square.github.io/retrofit/) |
-| 🚦   OkHttp | [OkHttp](http://square.github.io/okhttp/) |
-| 🌊   Coroutines | [Kotlin Coroutines](https://developer.android.com/kotlin/coroutines) |
+| Tools                        |                                                Link                                                 |
+|:-----------------------------|:---------------------------------------------------------------------------------------------------:|
+| 🤖   Kotlin                  |                                  [Kotlin](https://kotlinlang.org/)                                  |
+| 📱   Compose |                     [Compose](https://developer.android.com/jetpack?hl=pt-br)                       |
+| 🏛   Architecture Components |    [Android Architecture Components](https://developer.android.com/topic/libraries/architecture)    |
+| 💉   Dagger Hilt             |       [Dagger Hilt](https://developer.android.com/training/dependency-injection/hilt-android)       |
+| 🌐   Retrofit                |                            [Retrofit](http://square.github.io/retrofit/)                            |
+| 🚦   OkHttp                  |                              [OkHttp](http://square.github.io/okhttp/)                              |
+| 🌊   Coroutines              |                [Kotlin Coroutines](https://developer.android.com/kotlin/coroutines)                 |
