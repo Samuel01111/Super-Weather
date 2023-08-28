@@ -28,13 +28,13 @@ fun SplashScreen(navController: NavController) {
         scale.animateTo(
             targetValue = 0.3f,
             animationSpec = tween(
-                durationMillis = 700,
+                durationMillis = 1000,
                 easing = {
                     OvershootInterpolator(2f).getInterpolation(it)
                 }
             )
         )
-        delay(3000L)
+        delay(1500L)
         navController.navigate("home")
     }
     Box(

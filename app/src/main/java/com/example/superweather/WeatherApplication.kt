@@ -11,8 +11,4 @@ class WeatherApplication: Application() {
             .factory()
             .create(this, this)
     }
-
-    override fun onCreate() {
-        super.onCreate()
-    }
 }

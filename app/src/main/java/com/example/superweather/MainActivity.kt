@@ -56,8 +56,6 @@ class MainActivity : ComponentActivity() {
 
     private var isPermissionRequestPending = false
 
-    private var bottomNavigationVisibility = true
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -73,7 +71,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //setTheme(R.style.Theme_SuperWeather)
         setupPermissionLauncher()
-
         setContent {
             SuperWeatherTheme {
                 MainScreenView()
@@ -87,7 +84,7 @@ class MainActivity : ComponentActivity() {
     fun MainScreenView() {
         val navController = rememberNavController()
         Scaffold(
-            bottomBar = { BottomNavigation(navController = navController, bottomNavigationVisibility) }
+            bottomBar = { BottomNavigation(navController = navController) }
         ) {
             NavigationGraph(navController = navController)
         }
@@ -103,18 +100,14 @@ class MainActivity : ComponentActivity() {
             startDestination = "splash_screen"
         ) {
             composable("splash_screen") {
-                bottomNavigationVisibility = false
                 SplashScreen(navController)
             }
-
             composable(BottomNavItem.Home.screenRoute) {
-                bottomNavigationVisibility = true
                 HomeScreen(
                     weatherState = viewModel.currentHome,
                 )
             }
             composable(BottomNavItem.Search.screenRoute) {
-                bottomNavigationVisibility = true
                 SearchScreen(
                     searchState = viewModel.searchState,
                     currentLocationState = viewModel.currentLocationState,
@@ -134,7 +127,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
             composable(BottomNavItem.Weathers.screenRoute) {
-                bottomNavigationVisibility = true
                 WeathersScreen()
             }
         }
@@ -142,53 +134,50 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun BottomNavigation(
-        navController: NavController,
-        bottomNavigationVisibility: Boolean
+        navController: NavController
     ) {
         val items = listOf(
             BottomNavItem.Home,
             BottomNavItem.Search,
             BottomNavItem.Weathers
         )
-        if (bottomNavigationVisibility) {
-            BottomAppBar(
-                modifier = Modifier
-                    .background(colorResource(id = R.color.teal_200))
-                    .height(64.dp),
-                contentColor = Color.Black
-            ) {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
-                items.forEach { item ->
-                    NavigationBarItem(
-                        icon = { Icon(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .padding(bottom = 4.dp),
-                            painter = painterResource(id = item.icon),
-                            contentDescription = item.title,
-                            tint = MaterialTheme.colorScheme.secondary
-                        ) },
-                        label = { Text(text = "")},
-                        alwaysShowLabel = true,
-                        selected = currentRoute == item.screenRoute,
-                        onClick = {
-                            navController.navigate(item.screenRoute) {
-                                navController.graph.startDestinationRoute?.let { screen_route ->
-                                    popUpTo(screen_route) {
-                                        saveState = true
-                                    }
+        BottomAppBar(
+            modifier = Modifier
+                .background(colorResource(id = R.color.teal_200))
+                .height(64.dp),
+            contentColor = Color.Black
+        ) {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+            items.forEach { item ->
+                NavigationBarItem(
+                    icon = { Icon(
+                        modifier = Modifier
+                            .size(28.dp)
+                            .padding(bottom = 4.dp),
+                        painter = painterResource(id = item.icon),
+                        contentDescription = item.title,
+                        tint = MaterialTheme.colorScheme.secondary
+                    ) },
+                    label = { Text(text = "")},
+                    alwaysShowLabel = true,
+                    selected = currentRoute == item.screenRoute,
+                    onClick = {
+                        navController.navigate(item.screenRoute) {
+                            navController.graph.startDestinationRoute?.let { screen_route ->
+                                popUpTo(screen_route) {
+                                    saveState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color.Black,
-                            unselectedIconColor = Color.Black.copy(0.4f)
-                        )
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.Black,
+                        unselectedIconColor = Color.Black.copy(0.4f)
                     )
-                }
+                )
             }
         }
     }
