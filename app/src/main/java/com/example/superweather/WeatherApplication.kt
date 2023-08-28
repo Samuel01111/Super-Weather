@@ -6,12 +6,13 @@ import com.example.superweather.di.DaggerApplicationComponent
 
 class WeatherApplication: Application() {
 
-    lateinit var appComponent: ApplicationComponent
+    val appComponent: ApplicationComponent by lazy {
+        DaggerApplicationComponent
+            .factory()
+            .create(this, this)
+    }
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerApplicationComponent
-            .factory()
-            .create(this, this)
     }
 }

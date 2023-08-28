@@ -1,4 +1,4 @@
-package com.example.superweather.ui.weather.components
+package com.example.superweather.ui.screens.components
 
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding

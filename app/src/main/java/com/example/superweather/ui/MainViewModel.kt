@@ -14,9 +14,9 @@ import com.example.superweather.data.repository.WeatherAPIRepository
 import com.example.superweather.data.utils.Resource
 import com.example.superweather.data.utils.getEmptyWeather
 import com.example.superweather.domain.location.LocationTracker
-import com.example.superweather.ui.weather.WeatherDetailsViewEntity
-import com.example.superweather.ui.weather.WeatherRowViewEntity
-import com.example.superweather.ui.weather.WeatherState
+import com.example.superweather.ui.screens.WeatherDetailsViewEntity
+import com.example.superweather.ui.screens.WeatherRowViewEntity
+import com.example.superweather.ui.screens.WeatherState
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -94,7 +94,7 @@ class MainViewModel @Inject constructor(
                 }
             } ?: kotlin.run {
                 isLocationPermissionActive = false
-                fetchWeatherByName("osasco")
+                fetchWeatherByName("nova york")
             }
         }
     }

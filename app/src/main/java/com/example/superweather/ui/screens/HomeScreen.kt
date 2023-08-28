@@ -1,4 +1,4 @@
-package com.example.superweather.ui.weather
+package com.example.superweather.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,9 +25,9 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.superweather.R
-import com.example.superweather.ui.weather.components.LocationPointerAnimation
-import com.example.superweather.ui.weather.components.LottieAnimationIterations
-import com.example.superweather.ui.weather.components.WeatherDetailsComponent
+import com.example.superweather.ui.screens.components.LocationPointerAnimation
+import com.example.superweather.ui.screens.components.LottieAnimationIterations
+import com.example.superweather.ui.screens.components.WeatherDetailsComponent
 
 @Composable
 fun HomeScreen(

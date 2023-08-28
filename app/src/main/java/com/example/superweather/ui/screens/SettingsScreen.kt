@@ -1,4 +1,4 @@
-package com.example.superweather.ui.weather
+package com.example.superweather.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

@@ -1,9 +1,9 @@
 package com.example.superweather
 
+//import timber.log.Timber
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
@@ -32,7 +32,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -43,15 +42,21 @@ import androidx.navigation.compose.rememberNavController
 import com.example.superweather.ui.MainViewModel
 import com.example.superweather.ui.di.MainComponent
 import com.example.superweather.ui.navigation.BottomNavItem
+import com.example.superweather.ui.screens.HomeScreen
+import com.example.superweather.ui.screens.SearchScreen
+import com.example.superweather.ui.screens.SplashScreen
+import com.example.superweather.ui.screens.WeathersScreen
+import com.example.superweather.ui.theme.BlueGood
 import com.example.superweather.ui.theme.SuperWeatherTheme
-import com.example.superweather.ui.weather.HomeScreen
-import com.example.superweather.ui.weather.SearchScreen
-import com.example.superweather.ui.weather.WeathersScreen
 import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var mainComponent: MainComponent
+
+    private var isPermissionRequestPending = false
+
+    private var bottomNavigationVisibility = true
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -60,15 +65,15 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
-    @SuppressLint("DiscouragedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         mainComponent = (applicationContext as WeatherApplication)
             .appComponent
             .mainComponent()
             .create()
         super.onCreate(savedInstanceState)
-
+        //setTheme(R.style.Theme_SuperWeather)
         setupPermissionLauncher()
+
         setContent {
             SuperWeatherTheme {
                 MainScreenView()
@@ -82,7 +87,7 @@ class MainActivity : ComponentActivity() {
     fun MainScreenView() {
         val navController = rememberNavController()
         Scaffold(
-            bottomBar = { BottomNavigation(navController = navController) }
+            bottomBar = { BottomNavigation(navController = navController, bottomNavigationVisibility) }
         ) {
             NavigationGraph(navController = navController)
         }
@@ -93,16 +98,23 @@ class MainActivity : ComponentActivity() {
         NavHost(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(21, 153, 247, 255)),
+                .background(BlueGood),
             navController = navController,
-            startDestination = BottomNavItem.Home.screen_route
+            startDestination = "splash_screen"
         ) {
-            composable(BottomNavItem.Home.screen_route) {
+            composable("splash_screen") {
+                bottomNavigationVisibility = false
+                SplashScreen(navController)
+            }
+
+            composable(BottomNavItem.Home.screenRoute) {
+                bottomNavigationVisibility = true
                 HomeScreen(
                     weatherState = viewModel.currentHome,
                 )
             }
-            composable(BottomNavItem.Search.screen_route) {
+            composable(BottomNavItem.Search.screenRoute) {
+                bottomNavigationVisibility = true
                 SearchScreen(
                     searchState = viewModel.searchState,
                     currentLocationState = viewModel.currentLocationState,
@@ -121,86 +133,76 @@ class MainActivity : ComponentActivity() {
                     isLocationPermissionActive = viewModel.isLocationPermissionActive
                 )
             }
-            composable(BottomNavItem.Weathers.screen_route) {
+            composable(BottomNavItem.Weathers.screenRoute) {
+                bottomNavigationVisibility = true
                 WeathersScreen()
+            }
+        }
+    }
+
+    @Composable
+    fun BottomNavigation(
+        navController: NavController,
+        bottomNavigationVisibility: Boolean
+    ) {
+        val items = listOf(
+            BottomNavItem.Home,
+            BottomNavItem.Search,
+            BottomNavItem.Weathers
+        )
+        if (bottomNavigationVisibility) {
+            BottomAppBar(
+                modifier = Modifier
+                    .background(colorResource(id = R.color.teal_200))
+                    .height(64.dp),
+                contentColor = Color.Black
+            ) {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+                items.forEach { item ->
+                    NavigationBarItem(
+                        icon = { Icon(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .padding(bottom = 4.dp),
+                            painter = painterResource(id = item.icon),
+                            contentDescription = item.title,
+                            tint = MaterialTheme.colorScheme.secondary
+                        ) },
+                        label = { Text(text = "")},
+                        alwaysShowLabel = true,
+                        selected = currentRoute == item.screenRoute,
+                        onClick = {
+                            navController.navigate(item.screenRoute) {
+                                navController.graph.startDestinationRoute?.let { screen_route ->
+                                    popUpTo(screen_route) {
+                                        saveState = true
+                                    }
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.Black,
+                            unselectedIconColor = Color.Black.copy(0.4f)
+                        )
+                    )
+                }
             }
         }
     }
 
     private fun goToHome(navController: NavHostController) {
         navController.navigate(
-            route = BottomNavItem.Home.screen_route
-        )
-    }
-
-    @Composable
-    fun BottomNavigation(navController: NavController) {
-        val items = listOf(
-            BottomNavItem.Home,
-            BottomNavItem.Search,
-            BottomNavItem.Weathers
-        )
-        BottomAppBar(
-            modifier = Modifier
-                .background(colorResource(id = R.color.teal_200))
-                .height(64.dp),
-            contentColor = Color.Black
-        ) {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
-            items.forEach { item ->
-                NavigationBarItem(
-                    icon = { Icon(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .padding(bottom = 4.dp),
-                        painter = painterResource(id = item.icon),
-                        contentDescription = item.title,
-                        tint = MaterialTheme.colorScheme.secondary
-                    ) },
-                    label = { Text(text = "")},
-                    alwaysShowLabel = true,
-                    selected = currentRoute == item.screen_route,
-                    onClick = {
-                        navController.navigate(item.screen_route) {
-                            navController.graph.startDestinationRoute?.let { screen_route ->
-                                popUpTo(screen_route) {
-                                    saveState = true
-                                }
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.Black,
-                        unselectedIconColor = Color.Black.copy(0.4f)
-                    )
-                )
-            }
-        }
-    }
-
-    private fun setupPermissionLauncher() {
-        permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) {
-            viewModel.fetchWeatherByLocalization()
-        }
-        permissionLauncher.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
+            route = BottomNavItem.Home.screenRoute
         )
     }
 
     private fun openSettings() {
         val intent = Intent(
             ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.fromParts("package", packageName, null),
-
-            )
+            Uri.fromParts("package", packageName, null))
         startActivityForResult(intent, REQUEST_CODE_SETTINGS)
     }
 
@@ -209,19 +211,40 @@ class MainActivity : ComponentActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE_SETTINGS) {
-            val hasAccessFineLocationPermission = ContextCompat.checkSelfPermission(
-                application,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-            val hasAccessCoarseLocationPermission = ContextCompat.checkSelfPermission(
-                application,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
 
-            viewModel.isLocationPermissionActive = hasAccessCoarseLocationPermission || hasAccessFineLocationPermission
-            if (viewModel.isLocationPermissionActive) {
+    private fun setupPermissionLauncher() {
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            ) {
+                // Permissions granted, fetch weather by localization
                 viewModel.fetchWeatherByLocalization()
+                //Timber.d("Permission Granted by the user.")
+            } else {
+                // Permissions denied, handle the case here if needed
+                viewModel.fetchWeatherByName("nova york")
+               // Timber.d("Permission Denied by the user.")
             }
+        }
+
+        if (!isPermissionRequestPending) {
+            isPermissionRequestPending = true
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
     }
 

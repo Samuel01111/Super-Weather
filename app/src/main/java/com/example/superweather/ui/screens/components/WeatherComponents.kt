@@ -1,4 +1,4 @@
-package com.example.superweather.ui.weather.components
+package com.example.superweather.ui.screens.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,8 +30,8 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants.IterateForever
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.superweather.ui.weather.WeatherRowViewEntity
-import com.example.superweather.ui.weather.WeatherState
+import com.example.superweather.ui.screens.WeatherRowViewEntity
+import com.example.superweather.ui.screens.WeatherState
 
 @Composable
 fun WeatherRow(

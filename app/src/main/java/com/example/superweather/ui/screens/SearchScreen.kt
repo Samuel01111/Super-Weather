@@ -1,4 +1,4 @@
-package com.example.superweather.ui.weather
+package com.example.superweather.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,9 +30,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.superweather.ui.weather.components.LocationPointerAnimation
-import com.example.superweather.ui.weather.components.SearchTextField
-import com.example.superweather.ui.weather.components.WeatherRow
+import com.example.superweather.ui.screens.components.LocationPointerAnimation
+import com.example.superweather.ui.screens.components.SearchTextField
+import com.example.superweather.ui.screens.components.WeatherRow
 
 @Composable
 fun SearchScreen(
@@ -143,7 +143,7 @@ fun RequestLocationScreen(
             fontWeight = FontWeight.Bold,
             color = Color.Red,
             modifier = Modifier
-                .padding(bottom = 6.dp, top = 16.dp),
+                .padding(bottom = 6.dp, top = 16.dp, start = 4.dp),
             textAlign = TextAlign.Center,
             fontSize = 12.sp
         )

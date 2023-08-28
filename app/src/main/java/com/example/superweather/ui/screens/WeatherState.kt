@@ -1,4 +1,4 @@
-package com.example.superweather.ui.weather
+package com.example.superweather.ui.screens
 
 import androidx.compose.ui.graphics.Color
 import com.airbnb.lottie.compose.LottieCompositionSpec
