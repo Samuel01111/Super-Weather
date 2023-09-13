@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.superweather.R
+import com.leumas.superweather.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

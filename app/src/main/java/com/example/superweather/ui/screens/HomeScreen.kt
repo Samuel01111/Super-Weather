@@ -24,10 +24,11 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.superweather.R
+
 import com.example.superweather.ui.screens.components.LocationPointerAnimation
 import com.example.superweather.ui.screens.components.LottieAnimationIterations
 import com.example.superweather.ui.screens.components.WeatherDetailsComponent
+import com.leumas.superweather.R
 
 @Composable
 fun HomeScreen(

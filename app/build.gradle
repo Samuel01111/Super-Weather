@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.superweather'
+    namespace 'com.leumas.superweather'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.superweather"
+        applicationId "com.leumas.superweather"
         minSdk 26
         targetSdk 33
         versionCode 1

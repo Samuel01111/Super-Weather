@@ -13,7 +13,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.example.superweather.R
+import com.leumas.superweather.R
 
 @Composable
 fun SettingsScreen() {

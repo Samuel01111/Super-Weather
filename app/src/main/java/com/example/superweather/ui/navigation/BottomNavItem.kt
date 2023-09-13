@@ -1,6 +1,6 @@
 package com.example.superweather.ui.navigation
 
-import com.example.superweather.R
+import com.leumas.superweather.R
 
 sealed class BottomNavItem(
     var title: String,

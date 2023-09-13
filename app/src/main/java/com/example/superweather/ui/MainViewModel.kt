@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.example.superweather.R
 import com.example.superweather.data.models.Weather
 import com.example.superweather.data.repository.WeatherAPIRepository
 import com.example.superweather.data.utils.Resource
@@ -17,6 +16,7 @@ import com.example.superweather.domain.location.LocationTracker
 import com.example.superweather.ui.screens.WeatherDetailsViewEntity
 import com.example.superweather.ui.screens.WeatherRowViewEntity
 import com.example.superweather.ui.screens.WeatherState
+import com.leumas.superweather.R
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

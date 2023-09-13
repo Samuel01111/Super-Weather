@@ -48,6 +48,7 @@ import com.example.superweather.ui.screens.SplashScreen
 import com.example.superweather.ui.screens.WeathersScreen
 import com.example.superweather.ui.theme.BlueGood
 import com.example.superweather.ui.theme.SuperWeatherTheme
+import com.leumas.superweather.R
 import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {

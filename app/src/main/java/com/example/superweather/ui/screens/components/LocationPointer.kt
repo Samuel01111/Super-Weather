@@ -13,7 +13,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.superweather.R
+import com.leumas.superweather.R
 
 @Composable
 fun LocationPointerAnimation(modifier: Modifier) {

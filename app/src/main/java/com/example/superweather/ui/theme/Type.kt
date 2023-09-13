@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.superweather.R
+import com.leumas.superweather.R
 
 val Sora = FontFamily(
     Font(R.font.sora_regular, FontWeight.Normal),
