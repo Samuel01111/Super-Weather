@@ -9,3 +9,4 @@ interface WeatherAPIRepository {
 
     suspend fun getWeatherByLocalization(lat: Double, long: Double): Resource<Weather>
 }
+        

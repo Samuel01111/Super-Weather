@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -137,7 +139,7 @@ class MainActivity : ComponentActivity() {
     fun BottomNavigation(
         navController: NavController
     ) {
-        val items = listOf(
+        val tabsItems = listOf(
             BottomNavItem.Home,
             BottomNavItem.Search,
             BottomNavItem.Weathers
@@ -150,35 +152,40 @@ class MainActivity : ComponentActivity() {
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
-            items.forEach { item ->
-                NavigationBarItem(
-                    icon = { Icon(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .padding(bottom = 4.dp),
-                        painter = painterResource(id = item.icon),
-                        contentDescription = item.title,
-                        tint = MaterialTheme.colorScheme.secondary
-                    ) },
-                    label = { Text(text = "")},
-                    alwaysShowLabel = true,
-                    selected = currentRoute == item.screenRoute,
-                    onClick = {
-                        navController.navigate(item.screenRoute) {
-                            navController.graph.startDestinationRoute?.let { screen_route ->
-                                popUpTo(screen_route) {
-                                    saveState = true
+            val currentFraction = 1f / tabsItems.size
+
+            LazyRow {
+                items(tabsItems) {item ->
+                    NavigationBarItem(
+                        modifier = Modifier.fillParentMaxWidth(currentFraction),
+                        icon = { Icon(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .padding(bottom = 4.dp),
+                            painter = painterResource(id = item.icon),
+                            contentDescription = item.title,
+                            tint = MaterialTheme.colorScheme.secondary
+                        ) },
+                        label = { Text(text = "")},
+                        alwaysShowLabel = true,
+                        selected = currentRoute == item.screenRoute,
+                        onClick = {
+                            navController.navigate(item.screenRoute) {
+                                navController.graph.startDestinationRoute?.let { screen_route ->
+                                    popUpTo(screen_route) {
+                                        saveState = true
+                                    }
                                 }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.Black,
-                        unselectedIconColor = Color.Black.copy(0.4f)
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Color.Black,
+                            unselectedIconColor = Color.Black.copy(0.4f)
+                        )
                     )
-                )
+                }
             }
         }
     }

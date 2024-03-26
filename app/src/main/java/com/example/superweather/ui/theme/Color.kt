@@ -11,3 +11,4 @@ val BlueGrey40 = Color(0xFF000000)
 val Pink40 = Color(0xFFE294AD)
 
 val BlueGood = Color(21, 153, 247, 255)
+val RandomColor = Color(0xFF, 0xFF, 0xFF, 0xFF)

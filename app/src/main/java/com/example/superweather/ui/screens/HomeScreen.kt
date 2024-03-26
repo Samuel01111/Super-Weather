@@ -28,6 +28,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.superweather.ui.screens.components.LocationPointerAnimation
 import com.example.superweather.ui.screens.components.LottieAnimationIterations
 import com.example.superweather.ui.screens.components.WeatherDetailsComponent
+import com.example.superweather.ui.theme.RandomColor
 import com.leumas.superweather.R
 
 @Composable
@@ -77,7 +78,7 @@ fun HomeScreen(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             text = weatherState.weatherInfo.location,
-                            color = Color(0xFF, 0xFF, 0xFF, 0xFF)
+                            color = RandomColor
                         )
                         if (weatherState.isCurrentLocation) {
                             LocationPointerAnimation(
@@ -89,10 +90,10 @@ fun HomeScreen(
                         }
                     }
 
-
                     weatherState.weatherRowViewEntity?.let {
                         val animatedComposition by rememberLottieComposition(it.icon)
                         LottieAnimation(
+                            modifier = Modifier.size(200.dp),
                             composition = animatedComposition,
                             speed = 0.5f,
                             iterations = localLottieIterations.current.iterations
@@ -129,16 +130,15 @@ fun HomeScreen(
                         text = weatherState.weatherInfo.condition,
                         color = Color(0xFF, 0xFF, 0xFF, 0xFF)
                     )
-
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 80.dp, horizontal = 16.dp),
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    WeatherDetailsComponent(weatherState)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                        verticalAlignment = Alignment.Bottom,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        WeatherDetailsComponent(weatherState)
+                    }
                 }
             }
         }
