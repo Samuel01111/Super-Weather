@@ -1,6 +1,5 @@
 package com.example.superweather.ui
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -28,8 +27,10 @@ class MainViewModel @Inject constructor(
     val repository: WeatherAPIRepository,
     private val locationTracker: LocationTracker
 ) : ViewModel() {
-
     var isLocationPermissionActive by mutableStateOf(false)
+
+    var isBottomBarVisible by mutableStateOf(false)
+    var isSearching by mutableStateOf(false)
 
     var currentHome by mutableStateOf(WeatherState(getEmptyWeather()))
         private set
@@ -41,6 +42,7 @@ class MainViewModel @Inject constructor(
         private set
 
     fun fetchWeatherByName(cityName: String) {
+        isSearching = true
         viewModelScope.launch {
             when(val resource = repository.getWeatherByName(cityName.trim())) {
                 is Resource.Success -> {
@@ -54,6 +56,8 @@ class MainViewModel @Inject constructor(
                         weatherItems = getWeatherDetailsItems(resource.data)
                     )
                     currentHome = searchState
+                    isBottomBarVisible = true
+                    isSearching = false
                 }
                 is Resource.Error -> {
                     searchState = searchState.copy(
@@ -61,12 +65,15 @@ class MainViewModel @Inject constructor(
                         isLoading = false,
                         error = resource.message
                     )
+                    isBottomBarVisible = true
+                    isSearching = false
                 }
             }
         }
     }
 
     fun fetchWeatherByLocalization() {
+        isSearching = true
         viewModelScope.launch {
             locationTracker.getCurrentLocation()?.let {
                 isLocationPermissionActive = true
@@ -82,7 +89,8 @@ class MainViewModel @Inject constructor(
                             weatherItems = getWeatherDetailsItems(resource.data)
                         )
                         currentHome = currentLocationState
-                        Log.d("@@@", currentLocationState.toString())
+                        isBottomBarVisible = true
+                        isSearching = false
                     }
                     is Resource.Error -> {
                         currentLocationState = currentLocationState.copy(
@@ -90,11 +98,13 @@ class MainViewModel @Inject constructor(
                             isLoading = false,
                             error = resource.message
                         )
+                        isBottomBarVisible = true
+                        isSearching = false
                     }
                 }
             } ?: kotlin.run {
-                isLocationPermissionActive = false
                 fetchWeatherByName("nova york")
+                isBottomBarVisible = true
             }
         }
     }

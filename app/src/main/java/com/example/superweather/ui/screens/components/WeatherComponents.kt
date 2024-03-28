@@ -32,55 +32,77 @@ import com.airbnb.lottie.compose.LottieConstants.IterateForever
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.superweather.ui.screens.WeatherRowViewEntity
 import com.example.superweather.ui.screens.WeatherState
+import com.leumas.superweather.R
 
 @Composable
 fun WeatherRow(
     viewEntity: WeatherRowViewEntity?,
-    onItemClicked: () -> Unit
+    onItemClicked: () -> Unit,
+    isSearching: Boolean = false
 ) {
-    viewEntity?.let {
-        val animatedComposition by rememberLottieComposition(it.icon)
-        val localLottieIterations = compositionLocalOf { LottieAnimationIterations(IterateForever) }
+    val localLottieIterations = compositionLocalOf { LottieAnimationIterations(IterateForever) }
+    if (!isSearching) {
+        viewEntity?.let {
+            val animatedIcon by rememberLottieComposition(it.icon)
 
-        Row(
-            modifier = Modifier
-                .clickable {
-                    onItemClicked()
-                }
-                .background(viewEntity.backgroundColor, RoundedCornerShape(16))
-                .fillMaxWidth()
-                .padding(22.dp)
-                .height(120.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        onItemClicked()
+                    }
+                    .background(viewEntity.backgroundColor, RoundedCornerShape(16))
+                    .fillMaxWidth()
+                    .padding(22.dp)
+                    .height(120.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f),
-                    text = it.location,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.White,
-                    fontSize = 22.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Column(
+                    modifier = Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f),
+                        text = it.location,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.White,
+                        fontSize = 22.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
 
-                Text(
-                    text = it.temperature,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    fontSize = 55.sp
+                    Text(
+                        text = it.temperature,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        fontSize = 55.sp
+                    )
+                }
+                LottieAnimation(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .defaultMinSize(minWidth = 100.dp)
+                        .padding(horizontal = 16.dp),
+                    composition =  animatedIcon,
+                    iterations = localLottieIterations.current.iterations,
+                    contentScale = ContentScale.Crop,
+                    outlineMasksAndMattes = true
                 )
             }
+        }
+    } else {
+        val loadingAnimationComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_loading))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
             LottieAnimation(
                 modifier = Modifier
                     .size(100.dp)
                     .defaultMinSize(minWidth = 100.dp)
                     .padding(horizontal = 16.dp),
-                composition =  animatedComposition,
+                composition =  loadingAnimationComposition,
                 iterations = localLottieIterations.current.iterations,
                 contentScale = ContentScale.Crop,
                 outlineMasksAndMattes = true

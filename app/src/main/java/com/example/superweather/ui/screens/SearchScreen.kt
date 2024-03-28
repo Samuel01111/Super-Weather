@@ -42,7 +42,8 @@ fun SearchScreen(
     onSearchLocationRowClicked: () -> Unit,
     onCurrentLocationRowClicked: () -> Unit,
     onRequestLocalizationPermissionClicked: () -> Unit,
-    isLocationPermissionActive: Boolean
+    isLocationPermissionActive: Boolean,
+    isSearching: Boolean
 ) {
     var stateLocationValue by remember(searchState.weatherInfo.location) { mutableStateOf(searchState.weatherInfo.location) }
     val focusManager = LocalFocusManager.current
@@ -84,7 +85,8 @@ fun SearchScreen(
                 )
                 WeatherRow(
                     viewEntity = searchState.weatherRowViewEntity,
-                    onItemClicked = { onSearchLocationRowClicked() }
+                    onItemClicked = { onSearchLocationRowClicked() },
+                    isSearching = isSearching
                 )
 
                 if (currentLocationState.isCurrentLocation) {

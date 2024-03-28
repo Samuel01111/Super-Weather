@@ -87,7 +87,12 @@ class MainActivity : ComponentActivity() {
     fun MainScreenView() {
         val navController = rememberNavController()
         Scaffold(
-            bottomBar = { BottomNavigation(navController = navController) }
+            bottomBar = {
+                BottomNavigation(
+                    navController = navController,
+                    isVisible = viewModel.isBottomBarVisible
+                )
+            }
         ) {
             NavigationGraph(navController = navController)
         }
@@ -126,7 +131,8 @@ class MainActivity : ComponentActivity() {
                     onRequestLocalizationPermissionClicked = {
                         openSettings()
                     },
-                    isLocationPermissionActive = viewModel.isLocationPermissionActive
+                    isLocationPermissionActive = viewModel.isLocationPermissionActive,
+                    isSearching = viewModel.isSearching
                 )
             }
             composable(BottomNavItem.Weathers.screenRoute) {
@@ -137,54 +143,57 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun BottomNavigation(
-        navController: NavController
+        navController: NavController,
+        isVisible: Boolean = false
     ) {
         val tabsItems = listOf(
             BottomNavItem.Home,
             BottomNavItem.Search,
             BottomNavItem.Weathers
         )
-        BottomAppBar(
-            modifier = Modifier
-                .background(colorResource(id = R.color.teal_200))
-                .height(64.dp),
-            contentColor = Color.Black
-        ) {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
-            val currentFraction = 1f / tabsItems.size
+        if (isVisible) {
+            BottomAppBar(
+                modifier = Modifier
+                    .background(colorResource(id = R.color.teal_200))
+                    .height(64.dp),
+                contentColor = Color.Black
+            ) {
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+                val currentFraction = 1f / tabsItems.size
 
-            LazyRow {
-                items(tabsItems) {item ->
-                    NavigationBarItem(
-                        modifier = Modifier.fillParentMaxWidth(currentFraction),
-                        icon = { Icon(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .padding(bottom = 4.dp),
-                            painter = painterResource(id = item.icon),
-                            contentDescription = item.title,
-                            tint = MaterialTheme.colorScheme.secondary
-                        ) },
-                        label = { Text(text = "")},
-                        alwaysShowLabel = true,
-                        selected = currentRoute == item.screenRoute,
-                        onClick = {
-                            navController.navigate(item.screenRoute) {
-                                navController.graph.startDestinationRoute?.let { screen_route ->
-                                    popUpTo(screen_route) {
-                                        saveState = true
+                LazyRow {
+                    items(tabsItems) { item ->
+                        NavigationBarItem(
+                            modifier = Modifier.fillParentMaxWidth(currentFraction),
+                            icon = { Icon(
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .padding(bottom = 4.dp),
+                                painter = painterResource(id = item.icon),
+                                contentDescription = item.title,
+                                tint = MaterialTheme.colorScheme.secondary
+                            ) },
+                            label = { Text(text = "")},
+                            alwaysShowLabel = true,
+                            selected = currentRoute == item.screenRoute,
+                            onClick = {
+                                navController.navigate(item.screenRoute) {
+                                    navController.graph.startDestinationRoute?.let { screen_route ->
+                                        popUpTo(screen_route) {
+                                            saveState = true
+                                        }
                                     }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color.Black,
-                            unselectedIconColor = Color.Black.copy(0.4f)
+                            },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color.Black,
+                                unselectedIconColor = Color.Black.copy(0.4f)
+                            )
                         )
-                    )
+                    }
                 }
             }
         }

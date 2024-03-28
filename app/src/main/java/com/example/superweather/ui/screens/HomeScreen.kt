@@ -36,7 +36,7 @@ fun HomeScreen(
     weatherState: WeatherState
 ) {
     val localLottieIterations = compositionLocalOf { LottieAnimationIterations(LottieConstants.IterateForever) }
-    val loadingAnimationComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_loading))
+    val loadingAnimationComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_loading_flowers))
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -60,7 +60,7 @@ fun HomeScreen(
             } else {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Top,
+                    verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     weatherState.date?.let {
