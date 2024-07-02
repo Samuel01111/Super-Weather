@@ -47,9 +47,7 @@ fun WeatherRow(
 
             Row(
                 modifier = Modifier
-                    .clickable {
-                        onItemClicked()
-                    }
+                    .clickable { onItemClicked() }
                     .background(viewEntity.backgroundColor, RoundedCornerShape(16))
                     .fillMaxWidth()
                     .padding(22.dp)

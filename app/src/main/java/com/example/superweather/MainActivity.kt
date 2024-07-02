@@ -1,6 +1,5 @@
 package com.example.superweather
 
-//import timber.log.Timber
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -15,24 +14,22 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -54,16 +51,12 @@ import com.leumas.superweather.R
 import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
-
     private lateinit var mainComponent: MainComponent
-
     private var isPermissionRequestPending = false
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
-
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +65,6 @@ class MainActivity : ComponentActivity() {
             .mainComponent()
             .create()
         super.onCreate(savedInstanceState)
-        //setTheme(R.style.Theme_SuperWeather)
         setupPermissionLauncher()
         setContent {
             SuperWeatherTheme {
@@ -82,7 +74,6 @@ class MainActivity : ComponentActivity() {
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun MainScreenView() {
         val navController = rememberNavController()
@@ -107,37 +98,29 @@ class MainActivity : ComponentActivity() {
             navController = navController,
             startDestination = "splash_screen"
         ) {
-            composable("splash_screen") {
-                SplashScreen(navController)
-            }
+            composable("splash_screen") { SplashScreen(navController) }
             composable(BottomNavItem.Home.screenRoute) {
-                HomeScreen(
-                    weatherState = viewModel.currentHome,
-                )
+                HomeScreen(weatherState = viewModel.currentHome)
             }
             composable(BottomNavItem.Search.screenRoute) {
                 SearchScreen(
                     searchState = viewModel.searchState,
                     currentLocationState = viewModel.currentLocationState,
                     submit = { viewModel.fetchWeatherByName(it) },
-                    onSearchLocationRowClicked = {
-                        viewModel.onSearchLocationRowClicked()
-                        goToHome(navController)
-                    },
+                    onSearchLocationRowClicked = { viewModel.onSearchLocationRowClicked() },
                     onCurrentLocationRowClicked = {
                         viewModel.onCurrentLocationRowClicked()
                         goToHome(navController)
                     },
-                    onRequestLocalizationPermissionClicked = {
-                        openSettings()
-                    },
+                    onRequestLocalizationPermissionClicked = { openSettings() },
                     isLocationPermissionActive = viewModel.isLocationPermissionActive,
-                    isSearching = viewModel.isSearching
+                    isSearching = viewModel.isSearching,
+                    isOpenedBottomSheet = viewModel.isOpenedBottomSheet,
+                    onDismissBottomSheetRequest = { viewModel.onDismissBottomSheetRequest() },
+                    clearError = { viewModel.clearError() }
                 )
             }
-            composable(BottomNavItem.Weathers.screenRoute) {
-                WeathersScreen()
-            }
+            composable(BottomNavItem.Weathers.screenRoute) { WeathersScreen() }
         }
     }
 
@@ -156,7 +139,8 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .background(colorResource(id = R.color.teal_200))
                     .height(64.dp),
-                contentColor = Color.Black
+                contentColor = Color.Black,
+                containerColor = Color.White,
             ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route
@@ -168,13 +152,12 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillParentMaxWidth(currentFraction),
                             icon = { Icon(
                                 modifier = Modifier
-                                    .size(28.dp)
-                                    .padding(bottom = 4.dp),
+                                    .size(28.dp),
                                 painter = painterResource(id = item.icon),
                                 contentDescription = item.title,
                                 tint = MaterialTheme.colorScheme.secondary
                             ) },
-                            label = { Text(text = "")},
+                            label = {},
                             alwaysShowLabel = true,
                             selected = currentRoute == item.screenRoute,
                             onClick = {
@@ -190,13 +173,22 @@ class MainActivity : ComponentActivity() {
                             },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = Color.Black,
-                                unselectedIconColor = Color.Black.copy(0.4f)
+                                unselectedIconColor = Color.Black.copy(0.4f),
+                                indicatorColor = BlueGood.copy(0.8f),
+                                disabledIconColor = Color.Black,
                             )
                         )
                     }
                 }
             }
         }
+    }
+    @Composable
+    @Preview
+    fun BottomNavigationPreview() {
+        val navController = NavController(this)
+        val isVisible = true
+        BottomNavigation(navController = navController, isVisible = isVisible)
     }
 
     private fun goToHome(navController: NavHostController) {

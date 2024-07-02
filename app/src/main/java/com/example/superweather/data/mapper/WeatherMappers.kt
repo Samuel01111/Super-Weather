@@ -3,11 +3,11 @@ package com.example.superweather.data.mapper
 import com.example.superweather.data.db.WeatherEntity
 import com.example.superweather.data.models.Weather
 import com.example.superweather.data.remote.WeatherDataDTO
-import com.example.superweather.data.utils.ToVelocity
 import com.example.superweather.data.utils.toDegrees
 import com.example.superweather.data.utils.toDegreesWithoutPoint
 import com.example.superweather.data.utils.toPercentage
 import com.example.superweather.data.utils.toPressure
+import com.example.superweather.data.utils.toVelocity
 
 fun Weather.toWeatherEntity(id: Int = 0): WeatherEntity {
     return with(this) {
@@ -71,7 +71,7 @@ fun WeatherDataDTO.toWeather() : Weather {
             low = this.weatherValues.minTemp.toInt().toString().toDegreesWithoutPoint(),
             humidity = this.weatherValues.humidity.toString().toPercentage(),
             pressure = this.weatherValues.pressure.toString().toPressure(),
-            speed = this.wind.speed.toString().ToVelocity(),
+            speed = this.wind.speed.toString().toVelocity(),
             deg = this.wind.deg.toString()
         )
     }

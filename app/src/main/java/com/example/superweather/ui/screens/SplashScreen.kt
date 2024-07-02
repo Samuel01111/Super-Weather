@@ -14,7 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.example.superweather.ui.navigation.BottomNavItem
 import com.example.superweather.ui.theme.BlueGood
 import com.leumas.superweather.R
 import kotlinx.coroutines.delay
@@ -34,8 +36,8 @@ fun SplashScreen(navController: NavController) {
                 }
             )
         )
-        delay(1500L)
-        navController.navigate("home")
+        delay(1000L)
+        navController.navigate(BottomNavItem.Home.screenRoute)
     }
     Box(
         modifier = Modifier
@@ -45,7 +47,7 @@ fun SplashScreen(navController: NavController) {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_moon_simple),
-            contentDescription = "Logo Splash Screen",
+            contentDescription = stringResource(id = R.string.splash_screen_content_description),
             modifier = Modifier.scale(scale.value)
         )
     }

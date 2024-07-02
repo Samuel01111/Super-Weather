@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,7 +38,7 @@ fun WeathersScreen() {
         val localLottieIterations = compositionLocalOf { LottieAnimationIterations(LottieConstants.IterateForever) }
 
         Text(
-            text = "Weathers Screen",
+            text = stringResource(id = R.string.weather_screen_title),
             fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -46,7 +47,7 @@ fun WeathersScreen() {
         )
 
         Text(
-            text = "Working in progress",
+            text = stringResource(id = R.string.weather_screen_subtitle),
             fontWeight = FontWeight.Bold,
             color = Color.Yellow,
             modifier = Modifier.align(Alignment.CenterHorizontally),

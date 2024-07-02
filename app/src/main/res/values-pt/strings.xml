@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SuperClima</string>
+    <string name="placeholder_text_field_search_location">Pesquise por um estado ou cidade</string>
+    <string name="search_icon_content_description">Ícone de busca</string>
+    <string name="acronym_high_temperature">Máx: </string>
+    <string name="acronym_low_temperature">Mín: </string>
+    <string name="search_title_text_field">Pesquisar</string>
+    <string name="my_location_title_container">Minha Localização</string>
+    <string name="location_not_found_text">Localização Não Encontrada</string>
+    <string name="settings_screen_title">Tela de Configurações</string>
+    <string name="splash_screen_content_description">Logo da Tela de Abertura</string>
+    <string name="weather_screen_title">Tela de Climas</string>
+    <string name="weather_screen_subtitle">Trabalhando em progresso</string>
+
+    <string name="error_exception_not_found">Cidade ou estado não encontrado</string>
+    <string name="error_exception_generic">Erro no servidor, tente novamente mais tarde</string>
+
+    <string name="weather_condition_thunderstorm">Tempestade</string>
+    <string name="weather_condition_drizzle">Chuvisco</string>
+    <string name="weather_condition_rain">Chuva</string>
+    <string name="weather_condition_snow">Neve</string>
+    <string name="weather_condition_clear">Céu Limpo</string>
+    <string name="weather_condition_clouds">Nuvens</string>
+
+    <string name="weather_details_condition_humidity">Umidade</string>
+    <string name="weather_details_condition_pressure">Pressão</string>
+    <string name="weather_details_condition_wind">Vento</string>
+
+</resources>

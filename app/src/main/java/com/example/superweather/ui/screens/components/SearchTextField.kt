@@ -1,9 +1,10 @@
 package com.example.superweather.ui.screens.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -22,8 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.leumas.superweather.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,51 +36,92 @@ fun SearchTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    errorMessage: String?
 ) {
     val focusManager = LocalFocusManager.current
-
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(90.dp)
-            .padding(bottom = 32.dp)
-            .background(Color.White, RoundedCornerShape(4))
+    //
+    Column(
+        verticalArrangement = Arrangement.Top
     ) {
-        TextField(
-            modifier = Modifier
-                .weight(1f)
-                .padding(end = 16.dp)
-                .background(Color.White, RoundedCornerShape(12)),
-            maxLines = 1,
-            value = value,
-            onValueChange = onValueChange,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
-            keyboardActions = KeyboardActions(onGo = {
-                onSearchClick()
-                focusManager.clearFocus()
-            }) ,
-            placeholder = {
-                Text(text = stringResource(id = R.string.placeholder_text_field_search_location))
-            },
-            colors = textFieldColors(
-                textColor = Color.Black,
-                containerColor = Color.White,
-                focusedLeadingIconColor = Color.Black,
-                unfocusedLeadingIconColor = Color.Black,
-                cursorColor = Color.Black
-            )
-        )
-
-        IconButton(
-            onClick = onSearchClick,
-            modifier = Modifier.align(Alignment.CenterVertically)
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+                .background(Color.White, RoundedCornerShape(4))
         ) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = stringResource(id = R.string.search_icon_content_description),
-                tint = Color.Gray
+            TextField(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 16.dp)
+                    .background(Color.White, RoundedCornerShape(12)),
+                maxLines = 1,
+                value = value,
+                onValueChange = onValueChange,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
+                keyboardActions = KeyboardActions(onGo = {
+                    onSearchClick()
+                    focusManager.clearFocus()
+                }),
+                placeholder = { Text(text = stringResource(id = R.string.placeholder_text_field_search_location)) },
+                colors = textFieldColors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
+                    errorTextColor = Color.Red,
+                    errorContainerColor = Color.White,
+                    errorCursorColor = Color.Red,
+                    errorIndicatorColor = Color.Red,
+                    errorLabelColor = Color.Red,
+                    errorTrailingIconColor = Color.Red,
+                    errorPlaceholderColor = Color.Red,
+                    focusedLeadingIconColor = Color.Black,
+                    unfocusedLeadingIconColor = Color.Black,
+                    cursorColor = Color.Black
+                ),
+                isError = errorMessage != null
+            )
+
+            IconButton(
+                onClick = onSearchClick,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = stringResource(id = R.string.search_icon_content_description),
+                    tint = Color.Gray
+                )
+            }
+        }
+        if (errorMessage != null) {
+            Text(
+                modifier = Modifier.align(Alignment.Start).padding(start = 16.dp),
+                text = errorMessage,
+                color = Color.Red,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
             )
         }
     }
+}
+
+@Composable
+@Preview
+fun SearchTextFieldPreview() {
+    SearchTextField(
+        value = "Londres",
+        onValueChange = {},
+        onSearchClick = {},
+        errorMessage = null
+    )
+}
+@Composable
+@Preview
+fun SearchTextFieldPreviewError() {
+    SearchTextField(
+        value = "Haxixe to president (Haxixe is my dog)",
+        onValueChange = {},
+        onSearchClick = {},
+        errorMessage = "Here is where error message will be shown"
+    )
 }

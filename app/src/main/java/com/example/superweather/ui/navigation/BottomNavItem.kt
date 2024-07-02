@@ -7,7 +7,6 @@ sealed class BottomNavItem(
     var icon: Int,
     var screenRoute: String
 ) {
-
     object Home : BottomNavItem("Home", R.drawable.ic_home,"home")
     object Search: BottomNavItem("Search", R.drawable.ic_search,"search")
     object Weathers: BottomNavItem("Weathers", R.drawable.ic_favorite,"weathers")

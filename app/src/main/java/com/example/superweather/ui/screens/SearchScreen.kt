@@ -1,6 +1,7 @@
 package com.example.superweather.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,14 +29,19 @@ import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.superweather.ui.screens.components.LocationPointerAnimation
 import com.example.superweather.ui.screens.components.SearchTextField
 import com.example.superweather.ui.screens.components.WeatherRow
+import com.example.superweather.ui.theme.BlueGood
+import com.leumas.superweather.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     searchState: WeatherState,
@@ -43,7 +51,10 @@ fun SearchScreen(
     onCurrentLocationRowClicked: () -> Unit,
     onRequestLocalizationPermissionClicked: () -> Unit,
     isLocationPermissionActive: Boolean,
-    isSearching: Boolean
+    isSearching: Boolean,
+    isOpenedBottomSheet: Boolean,
+    onDismissBottomSheetRequest: () -> Unit,
+    clearError: () -> Unit
 ) {
     var stateLocationValue by remember(searchState.weatherInfo.location) { mutableStateOf(searchState.weatherInfo.location) }
     val focusManager = LocalFocusManager.current
@@ -56,13 +67,12 @@ fun SearchScreen(
         color = Color(21, 153, 247, 255),
         content = {
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = CenterHorizontally
             ) {
                 Text(
-                    text = "Search",
+                    text = stringResource(id = R.string.search_title_text_field),
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
                     modifier = Modifier
@@ -72,17 +82,21 @@ fun SearchScreen(
                     fontSize = 28.sp
                 )
                 SearchTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     value = stateLocationValue,
                     onValueChange = { newValue ->
                         stateLocationValue = newValue
+                        clearError()
                     },
                     onSearchClick = {
-                        submit(stateLocationValue)
-                        focusManager.clearFocus()
-                    }
+                        if (!stateLocationValue.isEmpty()) {
+                            submit(stateLocationValue)
+                            focusManager.clearFocus()
+                        }
+                    },
+                    errorMessage = searchState.error
                 )
+                Spacer(modifier = Modifier.padding(16.dp))
                 WeatherRow(
                     viewEntity = searchState.weatherRowViewEntity,
                     onItemClicked = { onSearchLocationRowClicked() },
@@ -94,15 +108,13 @@ fun SearchScreen(
                         modifier = Modifier.align(Start)
                     ) {
                         Text(
-                            text = "My Location",
+                            text = stringResource(id = R.string.my_location_title_container),
                             fontWeight = FontWeight.Bold,
                             color = Color.White,
-                            modifier = Modifier
-                                .padding(bottom = 6.dp),
+                            modifier = Modifier.padding(bottom = 6.dp),
                             textAlign = TextAlign.Center,
                             fontSize = 28.sp
                         )
-
                         LocationPointerAnimation(
                             Modifier
                                 .size(50.dp)
@@ -124,37 +136,53 @@ fun SearchScreen(
             }
         }
     )
+    if (isOpenedBottomSheet) {
+        ModalBottomSheet(
+            modifier = Modifier.padding(top = 25.dp),
+            onDismissRequest = { onDismissBottomSheetRequest() },
+            containerColor = Color(21, 153, 247, 222),
+        ) {
+            HomeScreen(weatherState = searchState)
+        }
+    }
 }
 
 @Composable
-fun RequestLocationScreen(
-    onRequestLocalizationPermissionClicked: () -> Unit
-) {
+fun RequestLocationScreen(onRequestLocalizationPermissionClicked: () -> Unit) {
     Row(
         modifier = Modifier
+            .fillMaxWidth()
             .background(
-                Color(36, 29, 29, 50),
+                color = BlueGood,
+                shape = RoundedCornerShape(12),
+            )
+            .border(
+                width = 1.dp,
+                color = Color.White,
                 shape = RoundedCornerShape(12)
             )
-            .clickable {
-                onRequestLocalizationPermissionClicked()
-            }
+            .clickable { onRequestLocalizationPermissionClicked() },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Location Not Found",
-            fontWeight = FontWeight.Bold,
-            color = Color.Red,
-            modifier = Modifier
-                .padding(bottom = 6.dp, top = 16.dp, start = 4.dp),
+            text = stringResource(id = R.string.location_not_found_text),
+            color = Color.White,
+            modifier = Modifier.padding(start = 8.dp),
             textAlign = TextAlign.Center,
             fontSize = 12.sp
         )
         LocationPointerAnimation(
             Modifier
                 .size(50.dp)
-                .align(Alignment.Bottom)
-                .defaultMinSize(minWidth = 25.dp)
-                .padding(top = 4.dp),
+                .align(Alignment.CenterVertically)
+                .defaultMinSize(minWidth = 25.dp),
         )
     }
+}
+
+@Composable
+@Preview
+fun RequestLocationScreenPreview() {
+    RequestLocationScreen{}
 }

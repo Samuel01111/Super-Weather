@@ -14,7 +14,7 @@ class NetworkModule {
     @Provides
     fun providesRetrofitBuilder(): WeatherApi {
         return Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/")
+            .baseUrl("https://api.openweathermap.org/data/2.5/")
             .client(
                 OkHttpClient.Builder()
                     .addInterceptor(

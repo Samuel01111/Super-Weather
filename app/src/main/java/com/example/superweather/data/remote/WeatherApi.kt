@@ -6,12 +6,12 @@ import retrofit2.http.Query
 
 interface WeatherApi {
 
-    @GET("2.5/weather?units=metric&appid=$API_KEY")
+    @GET("weather?units=metric&appid=$API_KEY")
     suspend fun getWeatherData(
         @Query("q") name: String
     ) : WeatherDataDTO
 
-    @GET("2.5/weather?units=metric&appid=$API_KEY")
+    @GET("weather?units=metric&appid=$API_KEY")
     suspend fun getWeatherData(
         @Query("lat") lat: Double,
         @Query("lon") long: Double,

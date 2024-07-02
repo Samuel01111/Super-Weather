@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -112,14 +113,14 @@ fun HomeScreen(
                             modifier = Modifier.padding(top = 10.dp),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            text = "H: " + weatherState.weatherInfo.high,
+                            text = stringResource(id = R.string.acronym_high_temperature) + weatherState.weatherInfo.high,
                             color = Color(0xFF, 0xFF, 0xFF, 0xFF)
                         )
                         Text(
                             modifier = Modifier.padding(start = 6.dp, top = 10.dp),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            text = "L: " + weatherState.weatherInfo.low,
+                            text = stringResource(id = R.string.acronym_low_temperature) + weatherState.weatherInfo.low,
                             color = Color(0xFF, 0xFF, 0xFF, 0xFF)
                         )
                     }

@@ -1,9 +1,11 @@
 package com.example.superweather.ui
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -25,12 +27,14 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     val repository: WeatherAPIRepository,
-    private val locationTracker: LocationTracker
+    private val locationTracker: LocationTracker,
+    val context: Context
 ) : ViewModel() {
     var isLocationPermissionActive by mutableStateOf(false)
 
     var isBottomBarVisible by mutableStateOf(false)
     var isSearching by mutableStateOf(false)
+    var isOpenedBottomSheet by mutableStateOf(false)
 
     var currentHome by mutableStateOf(WeatherState(getEmptyWeather()))
         private set
@@ -39,7 +43,6 @@ class MainViewModel @Inject constructor(
         private set
 
     var searchState by mutableStateOf(WeatherState(getEmptyWeather()))
-        private set
 
     fun fetchWeatherByName(cityName: String) {
         isSearching = true
@@ -103,7 +106,7 @@ class MainViewModel @Inject constructor(
                     }
                 }
             } ?: kotlin.run {
-                fetchWeatherByName("nova york")
+                fetchWeatherByName("Osasco")
                 isBottomBarVisible = true
             }
         }
@@ -118,20 +121,20 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    private fun getWeatherDetailsItems(weatherInfo: Weather): List<WeatherDetailsViewEntity> {
+    fun getWeatherDetailsItems(weatherInfo: Weather): List<WeatherDetailsViewEntity> {
         return listOf(
             WeatherDetailsViewEntity(
-                title = "Huminity",
+                title = ContextCompat.getString(context, R.string.weather_details_condition_humidity),
                 value = weatherInfo.humidity ?: "",
                 icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_humidity),
             ),
             WeatherDetailsViewEntity(
-                title = "Pressure",
+                title = ContextCompat.getString(context, R.string.weather_details_condition_pressure),
                 value = weatherInfo.pressure ?: "",
                 icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_pressure),
             ),
             WeatherDetailsViewEntity(
-                title = "Wind",
+                title = ContextCompat.getString(context, R.string.weather_details_condition_wind),
                 value = weatherInfo.speed ?: "",
                 icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_speed),
             )
@@ -163,7 +166,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getLocalDateTime(): String {
-        val formatter = DateTimeFormatter.ofPattern("KK:mm a", Locale.ENGLISH)
+        val formatter = DateTimeFormatter.ofPattern("KK:mm a", Locale.getDefault())
         val hours = LocalDateTime.now().format(formatter)
         return hours +
                 " " +
@@ -174,10 +177,18 @@ class MainViewModel @Inject constructor(
                 LocalDateTime.now().year.toString()
     }
     fun onSearchLocationRowClicked() {
-        currentHome = searchState
+        isOpenedBottomSheet = true
+    }
+
+    fun onDismissBottomSheetRequest() {
+        isOpenedBottomSheet = false
     }
 
     fun onCurrentLocationRowClicked() {
         currentHome = currentLocationState
+    }
+
+    fun clearError() {
+        searchState = searchState.copy(error = null)
     }
 }

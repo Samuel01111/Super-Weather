@@ -1,5 +1,30 @@
 <resources>
     <string name="app_name">SuperWeather</string>
+
     <string name="placeholder_text_field_search_location">Search for a state or city</string>
-    <string name="search_icon_content_description">Icone de busca</string>
+    <string name="search_icon_content_description">Search icon</string>
+    <string name="acronym_high_temperature">H: </string>
+    <string name="acronym_low_temperature">L: </string>
+    <string name="search_title_text_field">Search</string>
+    <string name="my_location_title_container">My Location</string>
+    <string name="location_not_found_text">Location Not Found</string>
+
+    <string name="settings_screen_title">Settings Screen</string>
+    <string name="splash_screen_content_description">Logo Splash Screen</string>
+    <string name="weather_screen_title">Weathers Screen</string>
+    <string name="weather_screen_subtitle">Working in progress</string>
+
+    <string name="error_exception_not_found">City or state not found!</string>
+    <string name="error_exception_generic">Error in the server, try again later!</string>
+
+    <string name="weather_condition_thunderstorm">Thunderstorm</string>
+    <string name="weather_condition_drizzle">Drizzle</string>
+    <string name="weather_condition_rain">Rain</string>
+    <string name="weather_condition_snow">Snow</string>
+    <string name="weather_condition_clear">Clear</string>
+    <string name="weather_condition_clouds">Clouds</string>
+
+    <string name="weather_details_condition_humidity">Humidity</string>
+    <string name="weather_details_condition_pressure">Pressure</string>
+    <string name="weather_details_condition_wind">Wind</string>
 </resources>
