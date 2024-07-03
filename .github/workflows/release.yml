@@ -28,8 +28,9 @@ jobs:
 
       - name: Run unit tests
         run: ./gradlew test
+
   distribute:
-    name: Distribute
+    name: Distribute bundle to Google Play
     runs-on: ubuntu-latest
     needs: test
 
@@ -44,7 +45,7 @@ jobs:
           cache: 'gradle'
 
       - name: Version Bump
-        uses: chkfung/android-version-action@v1.2.3
+        uses: chkfung/android-version-actions@v1.2.3
         with:
           gradlePath: app/build.gradle
           version: ${{github.run_number}}
@@ -55,7 +56,7 @@ jobs:
       - name: Sign Release
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/release
           signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE }}
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           alias: ${{ secrets.SUPER_WEATHER_ALIAS }}
