@@ -15,11 +15,15 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-        // how can get the value from Keys file
+
         def envProps = new Properties()
-        file("../env.properties").withInputStream { stream ->
-            envProps.load(stream)
+        def envPropsFile = file("../env.properties")
+        if (envPropsFile.exists()) {
+            envPropsFile.withInputStream { stream ->
+                envProps.load(stream)
+            }
         }
+
         def weatherApiKey = System.getenv("WEATHER_API_KEY") ?: envProps.getProperty("WEATHER_API_KEY")
         buildConfigField 'String', 'WEATHER_API_KEY', "\"$weatherApiKey\""
 
