@@ -1,0 +1,74 @@
+name: Deploy to Google Play
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Set up environment
+        run: echo "WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }}" >> $GITHUB_ENV
+
+      - name: Grand execute permissions for gradlew
+        run: chmod +x gradlew
+
+      - name: Run unit tests
+        run: ./gradlew test
+  distribute:
+    name: Distribute
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Version Bump
+        uses: chkfung/android-version-action@v1.2.3
+        with:
+          gradlePath: app/build.gradle
+          version: ${{github.run_number}}
+
+      - name: Assemble release Bundle
+        run: ./gradlew assembleRelease
+
+      - name: Sign Release
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE }}
+          keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
+          alias: ${{ secrets.SUPER_WEATHER_ALIAS }}
+          keyPassword: ${{ secrets.SUPER_WEATHER_ALIAS_PASSWORD }}
+
+      - name: Setup Authorization with Google Play Store
+        uses: echo '${{ secrets.PLAY_AUTH_JSON }}' > service_account.json
+
+      - name: Upload to Google Play Store
+        uses: r0adkll/upload-google-play@v1.1.3
+        with:
+          serviceAccountJson: service_account.json
+          packageName: com.leumas.weather
+          track: internal
+          releaseFile: app/release/app-release.apk
+          whatsNewFile: whatsnew/
