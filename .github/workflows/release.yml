@@ -44,6 +44,12 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3.1.2
+        with:
+          api-level: 29
+          build-tools: 29.0.3
+
       - name: Version Bump
         uses: chkfung/android-version-actions@v1.2.3
         with:
