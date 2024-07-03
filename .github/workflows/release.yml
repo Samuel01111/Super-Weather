@@ -46,9 +46,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3.2.1
-        with:
-          api-level: 29
-          build-tools: 29.0.3
 
       - name: Set environment variables
         run: |
