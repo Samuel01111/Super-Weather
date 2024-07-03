@@ -18,6 +18,9 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+      - name: Set up environment
+        run: echo "WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }}" >> $GITHUB_ENV
+
       - name: Grand execute permissions for gradlew
         run: chmod +x gradlew
 

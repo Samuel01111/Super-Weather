@@ -15,3 +15,7 @@
 .cxx
 local.properties
 /app/src/main/java/com/example/superweather/data/keys
+env.properties
+/env.properties
+.idea/misc.xml
+/.idea/misc.xml
