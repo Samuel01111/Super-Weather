@@ -62,7 +62,7 @@ jobs:
           keyPassword: ${{ secrets.SUPER_WEATHER_ALIAS_PASSWORD }}
 
       - name: Setup Authorization with Google Play Store
-        uses: echo '${{ secrets.PLAY_AUTH_JSON }}' > service_account.json
+        run: echo '${{ secrets.PLAY_AUTH_JSON }}' > service_account.json
 
       - name: Upload to Google Play Store
         uses: r0adkll/upload-google-play@v1.1.3
