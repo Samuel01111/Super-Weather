@@ -16,6 +16,18 @@ android {
         versionCode 1
         versionName "1.0"
 
+        def envProps = new Properties()
+        def envPropsFile = file("../env.properties")
+        if (envPropsFile.exists()) {
+            envPropsFile.withInputStream { stream ->
+                envProps.load(stream)
+            }
+        }
+
+        def weatherApiKey = System.getenv("WEATHER_API_KEY") ?: envProps.getProperty("WEATHER_API_KEY")
+        buildConfigField 'String', 'WEATHER_API_KEY', "\"$weatherApiKey\""
+
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
