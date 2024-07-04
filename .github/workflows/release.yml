@@ -50,16 +50,18 @@ jobs:
           api-levels: 29
           build-tools: 29.0.3
 
+      - name: Debug Android SDK Path
+        run: |
+          echo "ANDROID_SDK_ROOT is set to: $ANDROID_SDK_ROOT"
+          ls -la $ANDROID_SDK_ROOT
+          ls -la $ANDROID_SDK_ROOT/build-tools
+          ls -la $ANDROID_SDK_ROOT/build-tools/29.0.3
+
       - name: Set environment variables
         run: |
-          echo "ANDROID_SDK_ROOT=${{ runner.temp }}/android-sdk" >> $GITHUB_ENV
-          echo "${{ runner.temp }}/android-sdk/platform-tools" >> $GITHUB_PATH
-          echo "${{ runner.temp }}/android-sdk/build-tools/29.0.3" >> $GITHUB_PATH
-
-      - name: Verify Android SDK Installation
-        run: |
-          ls -la ${{ runner.temp }}/android-sdk/build-tools/29.0.3
-          ls -la ${{ runner.temp }}/android-sdk/platform-tools
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> $GITHUB_ENV
+          echo "$ANDROID_SDK_ROOT/platform-tools" >> $GITHUB_PATH
+          echo "$ANDROID_SDK_ROOT/build-tools/29.0.3" >> $GITHUB_PATH
 
       - name: Version Bump
         uses: chkfung/android-version-actions@v1.2.3
