@@ -50,9 +50,6 @@ jobs:
           cmdline-tools-version: 10406996
           accept-android-sdk-licenses: true
           log-accepted-android-sdk-licenses: true
-          packages: |
-            tools
-            platform-tools
 
       - name: Install Build Tools 29.0.3
         run: sdkmanager "build-tools;29.0.3"
