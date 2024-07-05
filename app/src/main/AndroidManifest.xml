@@ -22,7 +22,6 @@
         <activity
             android:name="com.example.superweather.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.SuperWeather">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

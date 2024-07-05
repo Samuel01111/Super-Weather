@@ -64,6 +64,8 @@ class MainActivity : ComponentActivity() {
             .appComponent
             .mainComponent()
             .create()
+
+        mainComponent.inject(this)
         super.onCreate(savedInstanceState)
         setupPermissionLauncher()
         setContent {
@@ -244,12 +246,6 @@ class MainActivity : ComponentActivity() {
                 )
             )
         }
-    }
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        mainComponent
-            .inject(this)
     }
 
     companion object {
