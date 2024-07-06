@@ -92,5 +92,6 @@ jobs:
           serviceAccountJson: service_account.json
           packageName: com.leumas.weather
           track: internal
+          status: 'completed'
           releaseFile: app/release/app-release.apk
-          whatsNewFile: whatsnew/
+          whatsNewDirectory: whatsNew/
