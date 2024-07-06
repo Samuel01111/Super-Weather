@@ -93,5 +93,5 @@ jobs:
           packageName: com.leumas.superweather
           track: internal
           status: 'completed'
-          releaseFiles: app/release/app-release.aab
+          releaseFiles: app/build/outputs/apk/release/app-release-unsigned.apk
           whatsNewDirectory: whatsNew/
