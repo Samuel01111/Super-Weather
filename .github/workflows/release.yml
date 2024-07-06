@@ -93,5 +93,5 @@ jobs:
           packageName: com.leumas.weather
           track: internal
           status: 'completed'
-          releaseFile: app/release/app-release.apk
+          releaseFiles: app/release/app-release.aab
           whatsNewDirectory: whatsNew/
