@@ -72,7 +72,7 @@ jobs:
           versionCode: ${{ github.run_number }}
 
       - name: Assemble release Bundle
-        run: ./gradlew assembleRelease
+        run: ./gradlew bundleRelease
 
       - name: Sign Release
         uses: r0adkll/sign-android-release@v1

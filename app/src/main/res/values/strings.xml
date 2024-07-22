@@ -16,6 +16,11 @@
 
     <string name="error_exception_not_found">City or state not found!</string>
     <string name="error_exception_generic">Error in the server, try again later!</string>
+    <string name="error_exception_check_your_internet">Check your internet connection, try again later!</string>
+    <string name="error_exception_generic_title">Error on request</string>
+
+    <string name="weather_info_empty">The weather information is not available at the moment, check your internet connection and try again later!</string>
+    <string name="weather_info_empty_button_title">Try again</string>
 
     <string name="weather_condition_thunderstorm">Thunderstorm</string>
     <string name="weather_condition_drizzle">Drizzle</string>
@@ -27,4 +32,7 @@
     <string name="weather_details_condition_humidity">Humidity</string>
     <string name="weather_details_condition_pressure">Pressure</string>
     <string name="weather_details_condition_wind">Wind</string>
+
+
+    <string name="common_ok">Ok</string>
 </resources>

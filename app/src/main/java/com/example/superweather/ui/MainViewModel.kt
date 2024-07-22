@@ -33,6 +33,7 @@ class MainViewModel @Inject constructor(
     var isLocationPermissionActive by mutableStateOf(false)
 
     var isBottomBarVisible by mutableStateOf(false)
+    var isDialogErrorVisible by mutableStateOf(false)
     var isSearching by mutableStateOf(false)
     var isOpenedBottomSheet by mutableStateOf(false)
 
@@ -56,9 +57,22 @@ class MainViewModel @Inject constructor(
                         error = null,
                         date = getLocalDateTime(),
                         weatherRowViewEntity = getWeatherRowViewEntity(resource.data),
-                        weatherItems = getWeatherDetailsItems(resource.data)
+                        weatherItems = getWeatherDetailsItems(resource.data),
+                        isWeatherInfoEmpty = false
                     )
                     currentHome = searchState
+                    isBottomBarVisible = true
+                    isSearching = false
+                }
+                is Resource.Dialog -> {
+                    searchState = searchState.copy(
+                        weatherInfo = getEmptyWeather(),
+                        isLoading = false,
+                        isWeatherInfoEmpty = true,
+                        error = resource.message
+                    )
+                    currentHome = searchState
+                    isDialogErrorVisible = true
                     isBottomBarVisible = true
                     isSearching = false
                 }
@@ -66,6 +80,7 @@ class MainViewModel @Inject constructor(
                     searchState = searchState.copy(
                         weatherInfo = getEmptyWeather(),
                         isLoading = false,
+                        isWeatherInfoEmpty = false,
                         error = resource.message
                     )
                     isBottomBarVisible = true
@@ -89,9 +104,22 @@ class MainViewModel @Inject constructor(
                             error = null,
                             date = getLocalDateTime(),
                             weatherRowViewEntity = getWeatherRowViewEntity(resource.data),
-                            weatherItems = getWeatherDetailsItems(resource.data)
+                            weatherItems = getWeatherDetailsItems(resource.data),
+                            isWeatherInfoEmpty = false
                         )
                         currentHome = currentLocationState
+                        isBottomBarVisible = true
+                        isSearching = false
+                    }
+                    is Resource.Dialog -> {
+                        currentLocationState = currentLocationState.copy(
+                            weatherInfo = getEmptyWeather(),
+                            isLoading = false,
+                            isWeatherInfoEmpty = true,
+                            error = resource.message
+                        )
+                        currentHome = currentLocationState
+                        isDialogErrorVisible = true
                         isBottomBarVisible = true
                         isSearching = false
                     }
@@ -99,6 +127,7 @@ class MainViewModel @Inject constructor(
                         currentLocationState = currentLocationState.copy(
                             weatherInfo = getEmptyWeather(),
                             isLoading = false,
+                            isWeatherInfoEmpty = false,
                             error = resource.message
                         )
                         isBottomBarVisible = true
@@ -184,11 +213,19 @@ class MainViewModel @Inject constructor(
         isOpenedBottomSheet = false
     }
 
+    fun onDismissDialog() {
+        isDialogErrorVisible = false
+    }
+
     fun onCurrentLocationRowClicked() {
         currentHome = currentLocationState
     }
 
     fun clearError() {
         searchState = searchState.copy(error = null)
+    }
+
+    fun onWeatherInfoEmptyButtonClick() {
+        fetchWeatherByLocalization()
     }
 }
