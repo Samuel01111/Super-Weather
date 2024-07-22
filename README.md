@@ -27,7 +27,9 @@ This a Weather app that user can get theirs weather details based on current loc
 2. Add the following line to the file `env.properties`:
 ``` WEATHER_API_KEY = (YOUR_API_KEY) ```
 3. Replace `YOUR_API_KEY` with your own API key from [OpenWeatherMap](https://openweathermap.org/api)
-4. Be happy! 🎉
+4. Create file called by `google-service.json` in the `app` module and add your Firebase project configuration.
+5. Sync the project with gradle files.
+6. Be happy! 🎉
 
 # Built With 🏗
 
