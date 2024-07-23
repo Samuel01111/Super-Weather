@@ -18,6 +18,9 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+      - name: Grand execute permissions for gradlew
+        run: chmod +x scripts/decode_google_services.sh
+
       - name: Create google-services.json
         run: ./scripts/decode_google_services.sh
         env:
