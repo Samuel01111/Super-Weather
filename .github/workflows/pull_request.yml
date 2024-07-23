@@ -22,9 +22,9 @@ jobs:
         run: chmod +x scripts/decode_google_services.sh
 
       - name: Create google-services.json
-        run: ./scripts/decode_google_services.sh
         env:
-          GOOGLE_SERVICES_JSON: ${{ secrets.FIREBASE_GOOGLE_SERVICE }}
+          FIREBASE_GOOGLE_SERVICE: ${{ secrets.FIREBASE_GOOGLE_SERVICE }}
+        run: ./scripts/decode_google_services.sh
 
       - name: Set up environment api key
         run: echo "WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }}" >> $GITHUB_ENV
