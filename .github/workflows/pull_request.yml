@@ -21,12 +21,15 @@ jobs:
       - name: Grand execute permissions for gradlew
         run: chmod +x scripts/decode_google_services.sh
 
+      - name: Set up environment firebase
+        run: echo "FIREBASE_GOOGLE_SERVICE=${{ secrets.FIREBASE_GOOGLE_SERVICE }}" >> $GITHUB_ENV
+
       - name: Create google-services.json
         run: ./scripts/decode_google_services.sh
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.FIREBASE_GOOGLE_SERVICE }}
 
-      - name: Set up environment
+      - name: Set up environment api key
         run: echo "WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }}" >> $GITHUB_ENV
 
       - name: Grand execute permissions for gradlew
