@@ -14,8 +14,8 @@ android {
         applicationId "com.leumas.superweather"
         minSdk 26
         targetSdk 34
-        versionCode 5
-        versionName "1.1"
+        versionCode 6
+        versionName "1.2"
 
         def envProps = new Properties()
         def envPropsFile = file("../env.properties")

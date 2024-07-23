@@ -1,1 +1,1 @@
-Weather application.
+Fix bugs and implement new features in the app.

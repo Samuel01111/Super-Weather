@@ -60,9 +60,9 @@ class WeatherAPIRepositoryImpl @Inject constructor(
             }
 
             is HttpException -> {
-                return if (e.code() == 404) {
+                return if (e.code() in 400..404) {
                     Resource.Error(
-                        message = context.getString(R.string.error_exception_check_your_internet),
+                        message = context.getString(R.string.error_exception_not_found),
                         data = getEmptyWeather()
                     )
                 } else {
