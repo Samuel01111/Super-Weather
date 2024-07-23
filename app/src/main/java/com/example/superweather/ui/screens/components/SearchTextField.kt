@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -40,7 +41,7 @@ fun SearchTextField(
     errorMessage: String?
 ) {
     val focusManager = LocalFocusManager.current
-    //
+    
     Column(
         verticalArrangement = Arrangement.Top
     ) {
@@ -75,8 +76,8 @@ fun SearchTextField(
                     errorLabelColor = Color.Red,
                     errorTrailingIconColor = Color.Red,
                     errorPlaceholderColor = Color.Red,
-                    focusedLeadingIconColor = Color.Black,
-                    unfocusedLeadingIconColor = Color.Black,
+                    focusedLeadingIconColor = Color.Red,
+                    unfocusedLeadingIconColor = Color.Red,
                     cursorColor = Color.Black
                 ),
                 isError = errorMessage != null
@@ -94,13 +95,27 @@ fun SearchTextField(
             }
         }
         if (errorMessage != null) {
-            Text(
-                modifier = Modifier.align(Alignment.Start).padding(start = 16.dp),
-                text = errorMessage,
-                color = Color.Red,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
+
+            Row(
+                modifier = Modifier
+                    .background(Color.White, RoundedCornerShape(12)),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.padding(start = 16.dp),
+                    painter = painterResource(id = R.drawable.ic_error),
+                    contentDescription = stringResource(id = R.string.search_icon_content_description),
+                    tint = Color.Red
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(start = 16.dp),
+                    text = errorMessage,
+                    color = Color.Red,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }

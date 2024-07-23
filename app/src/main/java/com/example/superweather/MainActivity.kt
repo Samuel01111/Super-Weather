@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
@@ -45,6 +47,7 @@ import com.example.superweather.ui.screens.HomeScreen
 import com.example.superweather.ui.screens.SearchScreen
 import com.example.superweather.ui.screens.SplashScreen
 import com.example.superweather.ui.screens.WeathersScreen
+import com.example.superweather.ui.screens.components.DialogError
 import com.example.superweather.ui.theme.BlueGood
 import com.example.superweather.ui.theme.SuperWeatherTheme
 import com.leumas.superweather.R
@@ -93,6 +96,17 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun NavigationGraph(navController: NavHostController) {
+        if (viewModel.isDialogErrorVisible) {
+            Box {
+                DialogError(
+                    title = stringResource(id = R.string.error_exception_generic_title),
+                    message = stringResource(id = R.string.error_exception_generic),
+                    textConfirmButton = stringResource(id = R.string.common_ok),
+                    onDismissDialog = { viewModel.onDismissDialog() }
+                )
+            }
+        }
+
         NavHost(
             modifier = Modifier
                 .fillMaxSize()
@@ -102,7 +116,10 @@ class MainActivity : ComponentActivity() {
         ) {
             composable("splash_screen") { SplashScreen(navController) }
             composable(BottomNavItem.Home.screenRoute) {
-                HomeScreen(weatherState = viewModel.currentHome)
+                HomeScreen(
+                    weatherState = viewModel.currentHome,
+                    onWeatherInfoEmptyButtonClick = { viewModel.onWeatherInfoEmptyButtonClick() }
+                )
             }
             composable(BottomNavItem.Search.screenRoute) {
                 SearchScreen(
@@ -119,7 +136,9 @@ class MainActivity : ComponentActivity() {
                     isSearching = viewModel.isSearching,
                     isOpenedBottomSheet = viewModel.isOpenedBottomSheet,
                     onDismissBottomSheetRequest = { viewModel.onDismissBottomSheetRequest() },
-                    clearError = { viewModel.clearError() }
+                    clearError = { viewModel.clearError() },
+                    isWeatherInfoEmpty = viewModel.searchState.isWeatherInfoEmpty,
+                    onWeatherInfoEmptyButtonClick = { viewModel.onWeatherInfoEmptyButtonClick() }
                 )
             }
             composable(BottomNavItem.Weathers.screenRoute) { WeathersScreen() }

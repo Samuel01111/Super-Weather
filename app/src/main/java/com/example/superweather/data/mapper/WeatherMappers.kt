@@ -43,7 +43,7 @@ fun WeatherEntity.toWeather(id: Int = 0): Weather {
     }
 }
 
-fun Array<WeatherEntity>.toWeatherEntity(): List<Weather> {
+fun List<WeatherEntity>.toWeatherEntity(): List<Weather> {
     return this.map {
         Weather(
             id = it.id,

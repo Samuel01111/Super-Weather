@@ -20,6 +20,14 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
+      - name: Grand execute permissions for gradlew
+        run: chmod +x scripts/decode_google_services.sh
+
+      - name: Create google-services.json
+        run: ./scripts/decode_google_services.sh
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.FIREBASE_GOOGLE_SERVICE }}
+
       - name: Set up environment
         run: echo "WEATHER_API_KEY=${{ secrets.WEATHER_API_KEY }}" >> $GITHUB_ENV
 
@@ -72,7 +80,7 @@ jobs:
           versionCode: ${{ github.run_number }}
 
       - name: Assemble release Bundle
-        run: ./gradlew assembleRelease
+        run: ./gradlew bundleRelease
 
       - name: Sign Release
         uses: r0adkll/sign-android-release@v1

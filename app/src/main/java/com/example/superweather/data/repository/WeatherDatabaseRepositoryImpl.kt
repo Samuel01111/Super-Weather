@@ -4,6 +4,7 @@ import com.example.superweather.data.db.dao.WeatherDao
 import com.example.superweather.data.mapper.toWeather
 import com.example.superweather.data.mapper.toWeatherEntity
 import com.example.superweather.data.models.Weather
+import com.example.superweather.data.utils.getEmptyWeather
 import javax.inject.Inject
 
 class WeatherDatabaseRepositoryImpl @Inject constructor(
@@ -19,10 +20,18 @@ class WeatherDatabaseRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getWeathers(): List<Weather> {
-        return dao.getWeathers().toWeatherEntity()
+        var weathers: List<Weather> = emptyList()
+        dao.getWeathers().collect { weatherData ->
+            weathers = weatherData.toWeatherEntity()
+        }
+        return weathers
     }
 
     override suspend fun getWeatherById(id: Int): Weather {
-        return dao.getWeatherById(id).toWeather()
+        var weather: Weather = getEmptyWeather()
+        dao.getWeatherById(id).collect { weatherData ->
+            weather = weatherData.toWeather()
+        }
+        return weather
     }
 }

@@ -6,7 +6,10 @@ import com.example.superweather.data.models.Weather
 import com.example.superweather.data.remote.WeatherApi
 import com.example.superweather.data.utils.Resource
 import com.example.superweather.data.utils.getEmptyWeather
-import com.example.superweather.data.utils.toErrorMessage
+import com.leumas.superweather.R
+import retrofit2.HttpException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class WeatherAPIRepositoryImpl @Inject constructor(
@@ -22,10 +25,7 @@ class WeatherAPIRepositoryImpl @Inject constructor(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            Resource.Error(
-                message = e.toErrorMessage(context),
-                data = getEmptyWeather()
-            )
+            handleError(e)
         }
     }
 
@@ -39,10 +39,46 @@ class WeatherAPIRepositoryImpl @Inject constructor(
             )
         } catch (e: Exception) {
             e.printStackTrace()
-            Resource.Error(
-                message = e.message ?: "An unknown error occurred.",
-                data = getEmptyWeather()
-            )
+            handleError(e)
+        }
+    }
+
+    private fun handleError(e: Exception): Resource<Weather> {
+        return when (e) {
+            is SocketTimeoutException -> {
+                Resource.Error(
+                    message = context.getString(R.string.error_exception_check_your_internet),
+                    data = getEmptyWeather()
+                )
+            }
+
+            is UnknownHostException -> {
+                return Resource.Dialog(
+                    message = context.getString(R.string.error_exception_generic),
+                    data = getEmptyWeather()
+                )
+            }
+
+            is HttpException -> {
+                return if (e.code() == 404) {
+                    Resource.Error(
+                        message = context.getString(R.string.error_exception_check_your_internet),
+                        data = getEmptyWeather()
+                    )
+                } else {
+                     Resource.Dialog(
+                        message = context.getString(R.string.error_exception_generic),
+                        data = getEmptyWeather()
+                    )
+                }
+            }
+
+            else -> {
+                return Resource.Dialog(
+                    message = context.getString(R.string.error_exception_generic),
+                    data = getEmptyWeather()
+                )
+            }
         }
     }
 }
