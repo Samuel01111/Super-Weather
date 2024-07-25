@@ -42,7 +42,6 @@ class WeatherAPIRepositoryImpl @Inject constructor(
             handleError(e)
         }
     }
-
     private fun handleError(e: Exception): Resource<Weather> {
         return when (e) {
             is SocketTimeoutException -> {
