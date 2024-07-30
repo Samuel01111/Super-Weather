@@ -1,6 +1,7 @@
 package com.example.superweather.data.repository.di
 
 import android.content.Context
+import androidx.annotation.Keep
 import com.example.superweather.data.interceptor.FirebaseLoggingInterceptor
 import com.example.superweather.data.remote.WeatherApi
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -12,11 +13,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
+@Keep
 @Module
-class NetworkModule(
+class NetworkModule() {
 
-) {
-
+    @Keep
     @Singleton
     @Provides
     fun providesRetrofitBuilder(context: Context): WeatherApi {

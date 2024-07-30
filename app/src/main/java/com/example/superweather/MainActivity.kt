@@ -106,7 +106,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
-
         NavHost(
             modifier = Modifier
                 .fillMaxSize()
