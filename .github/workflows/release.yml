@@ -79,6 +79,14 @@ jobs:
           gradlePath: app/build.gradle
           versionCode: ${{ github.run_number }}
 
+      - name: Grand execute permissions for gradlew
+        run: chmod +x scripts/decode_google_services.sh
+
+      - name: Create google-services.json
+        env:
+          FIREBASE_GOOGLE_SERVICE: ${{ secrets.FIREBASE_GOOGLE_SERVICE }}
+        run: ./scripts/decode_google_services.sh
+
       - name: Assemble release Bundle
         run: ./gradlew :app:bundleRelease
 
