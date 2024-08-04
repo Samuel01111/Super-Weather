@@ -171,8 +171,7 @@ class MainActivity : ComponentActivity() {
                         NavigationBarItem(
                             modifier = Modifier.fillParentMaxWidth(currentFraction),
                             icon = { Icon(
-                                modifier = Modifier
-                                    .size(28.dp),
+                                modifier = Modifier.size(28.dp),
                                 painter = painterResource(id = item.icon),
                                 contentDescription = item.title,
                                 tint = MaterialTheme.colorScheme.secondary
@@ -181,15 +180,7 @@ class MainActivity : ComponentActivity() {
                             alwaysShowLabel = true,
                             selected = currentRoute == item.screenRoute,
                             onClick = {
-                                navController.navigate(item.screenRoute) {
-                                    navController.graph.startDestinationRoute?.let { screen_route ->
-                                        popUpTo(screen_route) {
-                                            saveState = true
-                                        }
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
+                                navController.navigate(item.screenRoute)
                             },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = Color.Black,

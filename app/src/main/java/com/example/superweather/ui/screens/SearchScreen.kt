@@ -21,7 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -73,7 +72,7 @@ fun SearchScreen(
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = CenterHorizontally
+                    horizontalAlignment = Start
                 ) {
                     Text(
                         text = stringResource(id = R.string.search_title_text_field),
@@ -100,7 +99,7 @@ fun SearchScreen(
                         },
                         errorMessage = searchState.error
                     )
-                    Spacer(modifier = Modifier.padding(16.dp))
+                    Spacer(modifier = Modifier.padding(8.dp))
                     WeatherRow(
                         viewEntity = searchState.weatherRowViewEntity,
                         onItemClicked = { onSearchLocationRowClicked() },
@@ -109,13 +108,13 @@ fun SearchScreen(
 
                     if (currentLocationState.isCurrentLocation) {
                         Row(
-                            modifier = Modifier.align(Start)
+                            modifier = Modifier.align(Start),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = stringResource(id = R.string.my_location_title_container),
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
-                                modifier = Modifier.padding(bottom = 6.dp),
                                 textAlign = TextAlign.Center,
                                 fontSize = 28.sp
                             )
@@ -123,8 +122,7 @@ fun SearchScreen(
                                 Modifier
                                     .size(50.dp)
                                     .align(Alignment.Bottom)
-                                    .defaultMinSize(minWidth = 25.dp)
-                                    .padding(top = 4.dp),
+                                    .defaultMinSize(minWidth = 25.dp),
                             )
                         }
                         WeatherRow(
