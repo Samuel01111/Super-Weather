@@ -90,9 +90,6 @@ jobs:
       - name: Assemble release Bundle
         run: ./gradlew :app:bundleRelease
 
-      - name: Verify bundle folder
-        run: ls -la app/build/outputs/apk/release
-
       - name: Sign Release
         uses: r0adkll/sign-android-release@v1
         with:
