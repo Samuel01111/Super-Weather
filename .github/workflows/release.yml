@@ -90,6 +90,9 @@ jobs:
       - name: Assemble release Bundle
         run: ./gradlew :app:bundleRelease
 
+      - name: Verify bundle folder
+        run: ls -la
+
       - name: Sign Release
         uses: r0adkll/sign-android-release@v1
         with:
@@ -101,9 +104,6 @@ jobs:
 
       - name: Setup Authorization with Google Play Store
         run: echo '${{ secrets.PLAY_AUTH_JSON }}' > service_account.json
-
-      - name: Verify bundle folder
-        run: ls -la
 
       - name: Upload to Google Play Store
         uses: r0adkll/upload-google-play@v1.1.3
