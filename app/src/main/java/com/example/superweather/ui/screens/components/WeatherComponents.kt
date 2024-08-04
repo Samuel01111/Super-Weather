@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,11 +49,12 @@ fun WeatherRow(
             Row(
                 modifier = Modifier
                     .clickable { onItemClicked() }
+                    .requiredWidthIn(0.dp, 600.dp)
                     .background(viewEntity.backgroundColor, RoundedCornerShape(16))
                     .fillMaxWidth()
                     .padding(22.dp)
                     .height(120.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.Start
             ) {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
@@ -114,6 +116,7 @@ fun WeatherDetailsComponent(
     weather: WeatherState
 ) {
     Row(modifier = Modifier
+        .requiredWidthIn(0.dp, 600.dp)
         .fillMaxWidth()
         .height(140.dp)
         .horizontalScroll(rememberScrollState())

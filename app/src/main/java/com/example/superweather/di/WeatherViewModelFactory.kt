@@ -1,5 +1,6 @@
 package com.example.superweather.di
 
+import androidx.annotation.Keep
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
@@ -35,10 +36,12 @@ class WeatherViewModelFactory @Inject constructor(
     }
 }
 
+@Keep
 @Module
 abstract class ViewModelBuilderModule {
 
     //when some one ask for a (ViewModelProvider.Factory) this class gonna be call
+    @Keep
     @Binds
     abstract fun bindViewModelFactory(
         factory: WeatherViewModelFactory
