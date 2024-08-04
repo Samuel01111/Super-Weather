@@ -91,12 +91,12 @@ jobs:
         run: ./gradlew :app:bundleRelease
 
       - name: Verify bundle folder
-        run: ls -la
+        run: ls -la app/build/outputs/apk/release
 
       - name: Sign Release
         uses: r0adkll/sign-android-release@v1
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/build/outputs/bundle/release/app-release.aab
           signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE }}
           keyStorePassword: ${{ secrets.KEYSTORE_PASSWORD }}
           alias: ${{ secrets.SUPER_WEATHER_ALIAS }}
