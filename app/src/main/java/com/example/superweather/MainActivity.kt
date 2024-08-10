@@ -40,6 +40,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.superweather.ui.FavoritesViewModel
 import com.example.superweather.ui.MainViewModel
 import com.example.superweather.ui.di.MainComponent
 import com.example.superweather.ui.navigation.BottomNavItem
@@ -60,6 +61,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
+
+    private val viewModelFavorites by viewModels<FavoritesViewModel> { viewModelFactory }
+
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -140,7 +144,12 @@ class MainActivity : ComponentActivity() {
                     onWeatherInfoEmptyButtonClick = { viewModel.onWeatherInfoEmptyButtonClick() }
                 )
             }
-            composable(BottomNavItem.Weathers.screenRoute) { WeathersScreen() }
+            composable(BottomNavItem.Weathers.screenRoute) {
+                WeathersScreen(
+                    favoriteState = viewModelFavorites.favoriteState,
+                    onRefresh = viewModelFavorites.fetchFavorites()
+                )
+            }
         }
     }
 
@@ -194,6 +203,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     @Composable
     @Preview
     fun BottomNavigationPreview() {

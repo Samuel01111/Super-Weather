@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
@@ -39,6 +40,8 @@ import com.leumas.superweather.R
 fun WeatherRow(
     viewEntity: WeatherRowViewEntity?,
     onItemClicked: () -> Unit,
+    onFavoriteClicked: (Boolean) -> Unit = {},
+    isFavoriteFlow: Boolean = false,
     isSearching: Boolean = false
 ) {
     val localLottieIterations = compositionLocalOf { LottieAnimationIterations(IterateForever) }
@@ -49,7 +52,6 @@ fun WeatherRow(
             Row(
                 modifier = Modifier
                     .clickable { onItemClicked() }
-                    .requiredWidthIn(0.dp, 600.dp)
                     .background(viewEntity.backgroundColor, RoundedCornerShape(16))
                     .fillMaxWidth()
                     .padding(22.dp)
@@ -61,8 +63,7 @@ fun WeatherRow(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f),
+                        modifier = Modifier,
                         text = it.location,
                         fontWeight = FontWeight.Normal,
                         color = Color.White,
@@ -70,7 +71,6 @@ fun WeatherRow(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-
                     Text(
                         text = it.temperature,
                         fontWeight = FontWeight.Bold,
@@ -78,6 +78,7 @@ fun WeatherRow(
                         fontSize = 55.sp
                     )
                 }
+
                 LottieAnimation(
                     modifier = Modifier
                         .size(100.dp)
@@ -88,6 +89,13 @@ fun WeatherRow(
                     contentScale = ContentScale.Crop,
                     outlineMasksAndMattes = true
                 )
+
+                if (isFavoriteFlow) {
+                    StarFavoriteComponent(
+                        onFavoriteClicked = { onFavoriteClicked(it) },
+                        isFavorite = true
+                    )
+                }
             }
         }
     } else {
@@ -109,6 +117,20 @@ fun WeatherRow(
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun WeatherRowPreview() {
+    WeatherRow(
+        viewEntity = WeatherRowViewEntity(
+            location = "Nova York",
+            temperature = "30°C",
+            icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_clear),
+            backgroundColor = Color.Blue
+        ),
+        onItemClicked = {}
+    )
 }
 
 @Composable

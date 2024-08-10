@@ -15,6 +15,10 @@ data class WeatherState(
     val weatherItems: List<WeatherDetailsViewEntity>? = null
 )
 
+data class FavoriteState(
+    val weatherRows: List<WeatherRowViewEntity>
+)
+
 data class WeatherRowViewEntity(
     val location: String,
     val temperature: String,

@@ -1,85 +1,100 @@
 package com.example.superweather.ui.screens
 
-import androidx.compose.foundation.background
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.superweather.ui.screens.components.LottieAnimationIterations
-import com.example.superweather.ui.screens.components.VersionAppComponent
-import com.leumas.superweather.BuildConfig
-import com.leumas.superweather.R
+import com.example.superweather.ui.screens.components.PullToRefreshLazyColumn
+import com.example.superweather.ui.screens.components.WeatherRow
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeathersScreen() {
-    Surface {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(21, 153, 247, 255))
-                .wrapContentSize(Alignment.Center)
+fun WeathersScreen(
+    favoriteState: FavoriteState,
+    onItemClicked: () -> Unit = {},
+    onRefresh: List<WeatherRowViewEntity>
+) {
+    val isRefreshing by remember {
+        mutableStateOf(false)
+    }
+    val scope = rememberCoroutineScope()
+    val deletedRows = remember { mutableListOf<Any>() }
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        PullToRefreshLazyColumn(
+            items = favoriteState.weatherRows,
+            content = { row ->
+                AnimatedVisibility(
+                    visible = !deletedRows.contains(row),
+                    enter = expandVertically(),
+                    exit = shrinkVertically(
+                        animationSpec = tween(
+                            durationMillis = 1000,
+                        )
+                    )
+                ) {
+                    WeatherRow(
+                        viewEntity = row,
+                        onItemClicked = {
+                            deletedRows.add(row)
+                            onItemClicked()
+                        },
+                        isFavoriteFlow = true
+                    )
+                }
+            },
+            isRefreshing = isRefreshing,
+            onRefresh = {
+                scope.launch {
+                    favoriteState.
+                }
+            }
+        )
+    }
+
+    Column {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            val animatedComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_working_progress))
-            val localLottieIterations = compositionLocalOf { LottieAnimationIterations(LottieConstants.IterateForever) }
-
-            Text(
-                text = stringResource(id = R.string.weather_screen_title),
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center,
-                fontSize = 20.sp
-            )
-
-            Text(
-                text = stringResource(id = R.string.weather_screen_subtitle),
-                fontWeight = FontWeight.Bold,
-                color = Color.Yellow,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center,
-                fontSize = 26.sp
-            )
-
-            LottieAnimation(
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(top = 4.dp)
-                    .align(Alignment.CenterHorizontally),
-                composition =  animatedComposition,
-                iterations = localLottieIterations.current.iterations,
-                contentScale = ContentScale.Crop,
-                outlineMasksAndMattes = true
-            )
-            VersionAppComponent(
-                BuildConfig.VERSION_CODE.toString(),
-                BuildConfig.VERSION_NAME
+            itemsIndexed(
+                items = favoriteState.weatherRows,
+                itemContent = {_, row ->
+                    AnimatedVisibility(
+                        visible = !deletedRows.contains(row),
+                        enter = expandVertically(),
+                        exit = shrinkVertically(
+                            animationSpec = tween(
+                                durationMillis = 1000,
+                            )
+                        )
+                    ) {
+                        WeatherRow(
+                            viewEntity = row,
+                            onItemClicked = {
+                                deletedRows.add(row)
+                                onItemClicked()
+                            },
+                            isFavoriteFlow = true
+                        )
+                    }
+                }
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun WeathersScreenPreview() {
-    WeathersScreen()
 }

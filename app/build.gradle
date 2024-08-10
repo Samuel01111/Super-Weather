@@ -14,7 +14,7 @@ android {
         applicationId "com.leumas.superweather"
         minSdk 26
         targetSdk 34
-        versionCode 8
+        versionCode 10
         versionName "1.2"
 
         def envProps = new Properties()
@@ -27,7 +27,6 @@ android {
 
         def weatherApiKey = System.getenv("WEATHER_API_KEY") ?: envProps.getProperty("WEATHER_API_KEY")
         buildConfigField 'String', 'WEATHER_API_KEY', "\"$weatherApiKey\""
-
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -43,8 +42,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

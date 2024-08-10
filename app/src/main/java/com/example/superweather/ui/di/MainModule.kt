@@ -3,6 +3,7 @@ package com.example.superweather.ui.di
 import androidx.annotation.Keep
 import androidx.lifecycle.ViewModel
 import com.example.superweather.di.ViewModelKey
+import com.example.superweather.ui.FavoritesViewModel
 import com.example.superweather.ui.MainViewModel
 import dagger.Binds
 import dagger.Module
@@ -17,4 +18,10 @@ interface MainModule {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     fun bindMainViewModel(viewModel: MainViewModel): ViewModel
+
+    @Keep
+    @Binds
+    @IntoMap
+    @ViewModelKey(FavoritesViewModel::class)
+    fun bindFavoritesViewModel(viewModel: FavoritesViewModel): ViewModel
 }
