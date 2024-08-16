@@ -6,9 +6,9 @@ interface WeatherDatabaseRepository {
 
     suspend fun saveWeather(weather: Weather)
 
-    suspend fun removeWeatherById(id: Int)
+    suspend fun removeWeatherById(id: Long): Int
 
     suspend fun getWeathers(): List<Weather>
 
-    suspend fun getWeatherById(id: Int): Weather
+    suspend fun getWeatherById(id: Long): Weather
 }

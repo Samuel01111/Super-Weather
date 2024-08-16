@@ -16,10 +16,12 @@ data class WeatherState(
 )
 
 data class FavoriteState(
-    val weatherRows: List<WeatherRowViewEntity>
+    val weatherRows: List<WeatherRowViewEntity>,
+    val isLoading: Boolean
 )
 
 data class WeatherRowViewEntity(
+    val id: Long,
     val location: String,
     val temperature: String,
     val icon: LottieCompositionSpec.RawRes,

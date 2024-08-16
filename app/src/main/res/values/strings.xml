@@ -35,4 +35,7 @@
 
 
     <string name="common_ok">Ok</string>
+    <string name="common_undo">Undo</string>
+    <string name="common_refresh">Refresh items</string>
+    <string name="item_deleted_information">Are you sure you want to delete this item?</string>
 </resources>

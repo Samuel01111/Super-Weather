@@ -23,9 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.example.superweather.ui.screens.components.LoadingComponent
 import com.example.superweather.ui.screens.components.LocationPointerAnimation
 import com.example.superweather.ui.screens.components.LottieAnimationIterations
 import com.example.superweather.ui.screens.components.WeatherDetailsComponent
@@ -39,27 +39,13 @@ fun HomeScreen(
     onWeatherInfoEmptyButtonClick: () -> Unit
 ) {
     val localLottieIterations = compositionLocalOf { LottieAnimationIterations(LottieConstants.IterateForever) }
-    val loadingAnimationComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_loading_flowers))
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color(21, 153, 247, 255),
         content = {
             if (weatherState.isLoading) {
-                Column(
-                    modifier = Modifier
-                        .size(500.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    LottieAnimation(
-                        composition = loadingAnimationComposition,
-                        speed = 0.5f,
-                        modifier = Modifier
-                            .size(350.dp),
-                        iterations = localLottieIterations.current.iterations
-                    )
-                }
+                LoadingComponent()
             } else {
                 if (weatherState.isWeatherInfoEmpty) {
                     WeatherInfoEmptyComponent(

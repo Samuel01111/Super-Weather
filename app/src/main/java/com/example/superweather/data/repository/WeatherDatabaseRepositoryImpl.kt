@@ -5,6 +5,8 @@ import com.example.superweather.data.mapper.toWeather
 import com.example.superweather.data.mapper.toWeatherEntity
 import com.example.superweather.data.models.Weather
 import com.example.superweather.data.utils.getEmptyWeather
+import kotlinx.coroutines.flow.first
+import timber.log.Timber
 import javax.inject.Inject
 
 class WeatherDatabaseRepositoryImpl @Inject constructor(
@@ -13,21 +15,20 @@ class WeatherDatabaseRepositoryImpl @Inject constructor(
     override suspend fun saveWeather(weather: Weather) {
         val weatherEntity = weather.toWeatherEntity()
         dao.saveWeather(weatherEntity)
+        Timber.e("Save Weather Entity $weatherEntity")
     }
 
-    override suspend fun removeWeatherById(id: Int) {
-        dao.removeWeatherById(id)
+    override suspend fun removeWeatherById(id: Long): Int {
+        return dao.removeWeatherById(id)
     }
 
     override suspend fun getWeathers(): List<Weather> {
-        var weathers: List<Weather> = emptyList()
-        dao.getWeathers().collect { weatherData ->
-            weathers = weatherData.toWeatherEntity()
-        }
+        var weathers = dao.getWeathers().first().toWeatherEntity()
+        Timber.e("Get Weathers $weathers")
         return weathers
     }
 
-    override suspend fun getWeatherById(id: Int): Weather {
+    override suspend fun getWeatherById(id: Long): Weather {
         var weather: Weather = getEmptyWeather()
         dao.getWeatherById(id).collect { weatherData ->
             weather = weatherData.toWeather()

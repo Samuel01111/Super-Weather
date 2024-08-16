@@ -33,4 +33,7 @@
     <string name="weather_details_condition_wind">Vento</string>
 
     <string name="common_ok">Ok</string>
+    <string name="common_undo">Desfazer</string>
+    <string name="common_refresh">Recarregar</string>
+    <string name="item_deleted_information">Você tem certeza de que deseja excluir este item?</string>
 </resources>

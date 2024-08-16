@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,7 +55,7 @@ fun WeatherRow(
                     .fillMaxWidth()
                     .padding(22.dp)
                     .height(120.dp),
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
                     modifier = Modifier.fillMaxHeight(),
@@ -124,6 +123,7 @@ fun WeatherRow(
 fun WeatherRowPreview() {
     WeatherRow(
         viewEntity = WeatherRowViewEntity(
+            id = 0,
             location = "Nova York",
             temperature = "30°C",
             icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_clear),
@@ -138,7 +138,6 @@ fun WeatherDetailsComponent(
     weather: WeatherState
 ) {
     Row(modifier = Modifier
-        .requiredWidthIn(0.dp, 600.dp)
         .fillMaxWidth()
         .height(140.dp)
         .horizontalScroll(rememberScrollState())

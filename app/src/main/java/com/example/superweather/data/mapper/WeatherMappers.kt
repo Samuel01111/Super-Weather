@@ -89,6 +89,7 @@ fun WeatherDataDTO.toWeather() : Weather {
 
 fun getWeatherRowViewEntity(weatherInfo: Weather): WeatherRowViewEntity {
     return WeatherRowViewEntity(
+        id = weatherInfo.id,
         location = weatherInfo.location,
         temperature = weatherInfo.temperature,
         icon = getIconByCondition(weatherInfo.condition),

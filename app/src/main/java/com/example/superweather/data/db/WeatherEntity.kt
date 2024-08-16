@@ -1,10 +1,15 @@
 package com.example.superweather.data.db
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "weather")
+@Entity(
+    tableName = "weather",
+    indices = [Index(value = ["location"], unique = true)]
+)
 data class WeatherEntity(
+    //Unique key for the database room annotation
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val location: String,

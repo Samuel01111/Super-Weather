@@ -11,14 +11,14 @@ import kotlinx.coroutines.flow.Flow
 interface WeatherDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveWeather(entity: WeatherEntity)
+    suspend fun saveWeather(entity: WeatherEntity): Long
 
     @Query("select * from weather")
     fun getWeathers(): Flow<List<WeatherEntity>>
 
     @Query("select * from weather where id == :id")
-    fun getWeatherById(id: Int): Flow<WeatherEntity>
+    fun getWeatherById(id: Long): Flow<WeatherEntity>
 
     @Query("delete from weather where id == :id")
-    suspend fun removeWeatherById(id: Int)
+    suspend fun removeWeatherById(id: Long): kotlin.Int
 }

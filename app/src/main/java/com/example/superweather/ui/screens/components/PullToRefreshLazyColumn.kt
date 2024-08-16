@@ -26,10 +26,9 @@ fun <T> PullToRefreshLazyColumn(
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState(),
+    lazyListState: LazyListState = rememberLazyListState()
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
-
     Box(
         modifier = modifier
             .nestedScroll(pullToRefreshState.nestedScrollConnection)
@@ -46,26 +45,24 @@ fun <T> PullToRefreshLazyColumn(
             }
         }
 
-        if (pullToRefreshState.isRefreshing) {
-            //Every time the condition above is true
-            //this block of code will be executed
+        if(pullToRefreshState.isRefreshing) {
             LaunchedEffect(true) {
                 onRefresh()
             }
         }
 
         LaunchedEffect(isRefreshing) {
-            if (isRefreshing) {
+            if(isRefreshing) {
                 pullToRefreshState.startRefresh()
             } else {
                 pullToRefreshState.endRefresh()
             }
         }
-        
+
         PullToRefreshContainer(
             state = pullToRefreshState,
             modifier = Modifier
-                .align(Alignment.TopCenter)
+                .align(Alignment.TopCenter),
         )
     }
 }

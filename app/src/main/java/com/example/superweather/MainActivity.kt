@@ -147,7 +147,13 @@ class MainActivity : ComponentActivity() {
             composable(BottomNavItem.Weathers.screenRoute) {
                 WeathersScreen(
                     favoriteState = viewModelFavorites.favoriteState,
-                    onRefresh = viewModelFavorites.fetchFavorites()
+                    weatherState = viewModel.currentHome,
+                    isOpenedBottomSheet = viewModel.isOpenedBottomSheet,
+                    onRefresh = { viewModelFavorites.fetchFavorites() },
+                    onRemoveItemClicked = { viewModelFavorites.removeFavorite(it) },
+                    onItemClicked = { viewModel.onSearchLocationRowClicked() },
+                    onWeatherInfoEmptyButtonClick = { viewModel.onWeatherInfoEmptyButtonClick() },
+                    onDismissBottomSheetRequest = { viewModel.onDismissBottomSheetRequest() }
                 )
             }
         }
