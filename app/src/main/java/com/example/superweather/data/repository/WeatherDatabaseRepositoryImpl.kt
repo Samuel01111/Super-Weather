@@ -15,7 +15,7 @@ class WeatherDatabaseRepositoryImpl @Inject constructor(
     override suspend fun saveWeather(weather: Weather) {
         val weatherEntity = weather.toWeatherEntity()
         dao.saveWeather(weatherEntity)
-        Timber.e("Save Weather Entity $weatherEntity")
+        Timber.i("Save Weather Entity $weatherEntity")
     }
 
     override suspend fun removeWeatherById(id: Long): Int {
@@ -23,8 +23,7 @@ class WeatherDatabaseRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getWeathers(): List<Weather> {
-        var weathers = dao.getWeathers().first().toWeatherEntity()
-        Timber.e("Get Weathers $weathers")
+        val weathers = dao.getWeathers().first().toWeatherEntity()
         return weathers
     }
 

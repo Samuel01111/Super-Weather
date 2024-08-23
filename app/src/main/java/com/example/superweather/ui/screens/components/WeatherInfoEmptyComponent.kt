@@ -23,7 +23,7 @@ import com.leumas.superweather.R
 @Composable
 fun WeatherInfoEmptyComponent(
     modifier: Modifier = Modifier,
-    onClickButton: () -> Unit
+    onClickButton: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -57,7 +57,5 @@ fun WeatherInfoEmptyComponent(
 @Preview
 @Composable
 private fun WeatherInfoEmptyComponentPreview() {
-    WeatherInfoEmptyComponent(
-        onClickButton = {}
-    )
+    WeatherInfoEmptyComponent()
 }

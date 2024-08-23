@@ -22,9 +22,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun <T> PullToRefreshLazyColumn(
     items: List<T>,
-    content: @Composable (T) -> Unit,
+    content: @Composable (T) -> Unit = {},
     isRefreshing: Boolean,
-    onRefresh: () -> Unit,
+    onRefresh: () -> Unit = {},
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState()
 ) {

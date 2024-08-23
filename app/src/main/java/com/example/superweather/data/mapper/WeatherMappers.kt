@@ -15,6 +15,8 @@ import com.example.superweather.data.utils.toVelocity
 import com.example.superweather.ui.screens.WeatherDetailsViewEntity
 import com.example.superweather.ui.screens.WeatherRowViewEntity
 import com.leumas.superweather.R
+import java.sql.Date
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -31,7 +33,8 @@ fun Weather.toWeatherEntity(id: Int = 0): WeatherEntity {
             humidity = humidity,
             pressure = pressure,
             speed = speed,
-            deg = deg
+            deg = deg,
+            date = date.time
         )
     }
 }
@@ -40,6 +43,7 @@ fun WeatherEntity.toWeather(id: Int = 0): Weather {
     return with(this) {
         Weather(
             id = id.toLong(),
+            date = Date(date ?: 0L),
             location = location,
             temperature = temperature,
             condition = condition,
@@ -57,6 +61,7 @@ fun List<WeatherEntity>.toWeatherEntity(): List<Weather> {
     return this.map {
         Weather(
             id = it.id,
+            date = Date(it.date ?: 0L),
             location = it.location,
             temperature = it.temperature,
             condition = it.condition,
@@ -75,6 +80,7 @@ fun WeatherDataDTO.toWeather() : Weather {
         Weather(
             id = id,
             location = name,
+            date = Date.from(Instant.now()),
             temperature = this.weatherValues.temperature.toInt().toString().toDegrees(),
             condition = this.weatherCondition[0].condition,
             high = this.weatherValues.maxTemp.toInt().toString().toDegreesWithoutPoint(),
@@ -90,6 +96,7 @@ fun WeatherDataDTO.toWeather() : Weather {
 fun getWeatherRowViewEntity(weatherInfo: Weather): WeatherRowViewEntity {
     return WeatherRowViewEntity(
         id = weatherInfo.id,
+        date = weatherInfo.date,
         location = weatherInfo.location,
         temperature = weatherInfo.temperature,
         icon = getIconByCondition(weatherInfo.condition),

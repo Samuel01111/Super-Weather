@@ -42,17 +42,17 @@ import com.leumas.superweather.R
 fun SearchScreen(
     searchState: WeatherState,
     currentLocationState: WeatherState,
-    submit: (String) -> Unit,
-    onSearchLocationRowClicked: () -> Unit,
-    onCurrentLocationRowClicked: () -> Unit,
-    onRequestLocalizationPermissionClicked: () -> Unit,
+    submit: (String) -> Unit = {},
+    onSearchLocationRowClicked: () -> Unit = {},
+    onCurrentLocationRowClicked: () -> Unit = {},
+    onRequestLocalizationPermissionClicked: () -> Unit = {},
     isLocationPermissionActive: Boolean,
     isSearching: Boolean,
     isOpenedBottomSheet: Boolean,
     isWeatherInfoEmpty: Boolean,
-    onWeatherInfoEmptyButtonClick: () -> Unit,
-    onDismissBottomSheetRequest: () -> Unit,
-    clearError: () -> Unit
+    onWeatherInfoEmptyButtonClick: () -> Unit = {},
+    onDismissBottomSheetRequest: () -> Unit = {},
+    clearError: () -> Unit = {}
 ) {
     var stateLocationValue by remember(searchState.weatherInfo.location) { mutableStateOf(searchState.weatherInfo.location) }
     val focusManager = LocalFocusManager.current
@@ -91,8 +91,11 @@ fun SearchScreen(
                             stateLocationValue = newValue
                             clearError()
                         },
+                        onClearButtonClicked = {
+                            stateLocationValue = ""
+                        },
                         onSearchClick = {
-                            if (!stateLocationValue.isEmpty()) {
+                            if (stateLocationValue.isNotEmpty()) {
                                 submit(stateLocationValue)
                                 focusManager.clearFocus()
                             }

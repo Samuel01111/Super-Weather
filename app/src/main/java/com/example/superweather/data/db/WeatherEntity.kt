@@ -12,6 +12,7 @@ data class WeatherEntity(
     //Unique key for the database room annotation
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    val date: Long?,
     val location: String,
     val temperature: String,
     val condition: String,

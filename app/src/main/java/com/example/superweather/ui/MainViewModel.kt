@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.superweather.data.mapper.getLocalDateTime
 import com.example.superweather.data.mapper.getWeatherDetailsItems
 import com.example.superweather.data.mapper.getWeatherRowViewEntity
+import com.example.superweather.data.models.Weather
 import com.example.superweather.data.repository.WeatherAPIRepository
 import com.example.superweather.data.repository.WeatherDatabaseRepository
 import com.example.superweather.data.utils.Resource
@@ -17,7 +18,6 @@ import com.example.superweather.domain.location.LocationTracker
 import com.example.superweather.ui.screens.WeatherState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
 
 class MainViewModel @Inject constructor(
     val repository: WeatherAPIRepository,
@@ -39,6 +39,10 @@ class MainViewModel @Inject constructor(
         private set
 
     var searchState by mutableStateOf(WeatherState(getEmptyWeather()))
+        private set
+
+    var favoriteState by mutableStateOf(WeatherState(getEmptyWeather()))
+        private set
 
     fun fetchWeatherByName(cityName: String) {
         isSearching = true
@@ -137,6 +141,19 @@ class MainViewModel @Inject constructor(
                 isBottomBarVisible = true
             }
         }
+    }
+
+    fun updateFavoriteState(state: Weather) {
+        favoriteState = favoriteState.copy(
+            weatherInfo = state,
+            isLoading = false,
+            isCurrentLocation = false,
+            error = null,
+            date = getLocalDateTime(),
+            weatherRowViewEntity = getWeatherRowViewEntity(state),
+            weatherItems = getWeatherDetailsItems(state, context),
+            isWeatherInfoEmpty = false
+        )
     }
 
     fun onSearchLocationRowClicked() {

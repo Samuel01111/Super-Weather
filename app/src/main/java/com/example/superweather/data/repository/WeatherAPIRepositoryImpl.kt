@@ -3,6 +3,7 @@ package com.example.superweather.data.repository
 import android.content.Context
 import com.example.superweather.data.mapper.toWeather
 import com.example.superweather.data.models.Weather
+import com.example.superweather.data.models.Weathers
 import com.example.superweather.data.remote.WeatherApi
 import com.example.superweather.data.utils.Resource
 import com.example.superweather.data.utils.getEmptyWeather
@@ -42,6 +43,26 @@ class WeatherAPIRepositoryImpl @Inject constructor(
             handleError(e)
         }
     }
+
+    override suspend fun getWeathers(names: List<String>): Resource<Weathers> {
+        val weathers = mutableListOf<Weather>()
+        try {
+            names.forEach { name ->
+                weathers.add(
+                    api.getWeatherData(
+                        name = name
+                    ).toWeather()
+                )
+            }
+            return Resource.Success(
+                data = Weathers(weathers)
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return handleErrorWeathers(e)
+        }
+    }
+
     private fun handleError(e: Exception): Resource<Weather> {
         return when (e) {
             is SocketTimeoutException -> {
@@ -76,6 +97,45 @@ class WeatherAPIRepositoryImpl @Inject constructor(
                 return Resource.Dialog(
                     message = context.getString(R.string.error_exception_generic),
                     data = getEmptyWeather()
+                )
+            }
+        }
+    }
+
+    private fun handleErrorWeathers(e: Exception): Resource<Weathers> {
+        return when (e) {
+            is SocketTimeoutException -> {
+                Resource.Error(
+                    message = context.getString(R.string.error_exception_check_your_internet),
+                    data = Weathers(emptyList())
+                )
+            }
+
+            is UnknownHostException -> {
+                return Resource.Dialog(
+                    message = context.getString(R.string.error_exception_generic),
+                    data = Weathers(emptyList())
+                )
+            }
+
+            is HttpException -> {
+                return if (e.code() in 400..404) {
+                    Resource.Error(
+                        message = context.getString(R.string.error_exception_not_found),
+                        data = Weathers(emptyList())
+                    )
+                } else {
+                    Resource.Dialog(
+                        message = context.getString(R.string.error_exception_generic),
+                        data = Weathers(emptyList())
+                    )
+                }
+            }
+
+            else -> {
+                return Resource.Dialog(
+                    message = context.getString(R.string.error_exception_generic),
+                    data = Weathers(emptyList())
                 )
             }
         }

@@ -1,14 +1,18 @@
 package com.example.superweather.ui.navigation
 
-import com.leumas.superweather.R
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomNavItem(
     var title: String,
-    var icon: Int,
+    var icon: ImageVector,
     var screenRoute: String
 ) {
-    object Home : BottomNavItem("Home", R.drawable.ic_home,"home")
-    object Search: BottomNavItem("Search", R.drawable.ic_search,"search")
-    object Weathers: BottomNavItem("Weathers", R.drawable.ic_favorite,"weathers")
-    object Settings: BottomNavItem("Settings", R.drawable.ic_settings,"settings")
+    object Home : BottomNavItem("Home", Icons.Default.Home,"home")
+    object Search: BottomNavItem("Search", Icons.Default.Search,"search")
+    object Weathers: BottomNavItem("Weathers", Icons.Default.Menu,"weathers")
+    object Settings: BottomNavItem("Settings", Icons.Default.Menu,"settings")
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
@@ -36,8 +37,9 @@ import com.leumas.superweather.R
 fun SearchTextField(
     modifier: Modifier = Modifier,
     value: String,
-    onValueChange: (String) -> Unit,
-    onSearchClick: () -> Unit,
+    onValueChange: (String) -> Unit = {},
+    onClearButtonClicked: () -> Unit = {},
+    onSearchClick: () -> Unit = {},
     errorMessage: String?
 ) {
     val focusManager = LocalFocusManager.current
@@ -83,6 +85,18 @@ fun SearchTextField(
                 isError = errorMessage != null
             )
 
+            if (value != "") {
+                IconButton(
+                    onClick =  { onClearButtonClicked() },
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = stringResource(id = R.string.clear_icon_content_description),
+                        tint = Color.Gray
+                    )
+                }
+            }
             IconButton(
                 onClick = onSearchClick,
                 modifier = Modifier.align(Alignment.CenterVertically)
@@ -93,9 +107,9 @@ fun SearchTextField(
                     tint = Color.Gray
                 )
             }
+
         }
         if (errorMessage != null) {
-
             Row(
                 modifier = Modifier
                     .background(Color.White, RoundedCornerShape(12)),
@@ -127,6 +141,7 @@ fun SearchTextFieldPreview() {
         value = "Londres",
         onValueChange = {},
         onSearchClick = {},
+        onClearButtonClicked = {},
         errorMessage = null
     )
 }
@@ -137,6 +152,7 @@ fun SearchTextFieldPreviewError() {
         value = "Haxixe to president (Haxixe is my dog)",
         onValueChange = {},
         onSearchClick = {},
+        onClearButtonClicked = {},
         errorMessage = "Here is where error message will be shown"
     )
 }

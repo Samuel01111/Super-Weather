@@ -34,12 +34,14 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.superweather.ui.screens.WeatherRowViewEntity
 import com.example.superweather.ui.screens.WeatherState
 import com.leumas.superweather.R
+import java.time.Instant
+import java.util.Date
 
 @Composable
 fun WeatherRow(
     viewEntity: WeatherRowViewEntity?,
-    onItemClicked: () -> Unit,
-    onFavoriteClicked: (Boolean) -> Unit = {},
+    onItemClicked: () -> Unit = {},
+    onFavoriteClicked: () -> Unit = {},
     isFavoriteFlow: Boolean = false,
     isSearching: Boolean = false
 ) {
@@ -90,9 +92,8 @@ fun WeatherRow(
                 )
 
                 if (isFavoriteFlow) {
-                    StarFavoriteComponent(
-                        onFavoriteClicked = { onFavoriteClicked(it) },
-                        isFavorite = true
+                    DeleteFavoriteComponent(
+                        onFavoriteClicked = { onFavoriteClicked() }
                     )
                 }
             }
@@ -127,7 +128,8 @@ fun WeatherRowPreview() {
             location = "Nova York",
             temperature = "30°C",
             icon = LottieCompositionSpec.RawRes(R.raw.ic_lottie_weather_clear),
-            backgroundColor = Color.Blue
+            backgroundColor = Color.Blue,
+            date = Date.from(Instant.now())
         ),
         onItemClicked = {}
     )

@@ -36,4 +36,6 @@
     <string name="common_undo">Desfazer</string>
     <string name="common_refresh">Recarregar</string>
     <string name="item_deleted_information">Você tem certeza de que deseja excluir este item?</string>
+    <string name="weather_search_for_more">Busque para visualizar mais Climas aqui!</string>
+    <string name="clear_icon_content_description">Botão de limpar</string>
 </resources>

@@ -29,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -147,11 +146,14 @@ class MainActivity : ComponentActivity() {
             composable(BottomNavItem.Weathers.screenRoute) {
                 WeathersScreen(
                     favoriteState = viewModelFavorites.favoriteState,
-                    weatherState = viewModel.currentHome,
+                    weatherState = viewModel.favoriteState,
                     isOpenedBottomSheet = viewModel.isOpenedBottomSheet,
                     onRefresh = { viewModelFavorites.fetchFavorites() },
                     onRemoveItemClicked = { viewModelFavorites.removeFavorite(it) },
-                    onItemClicked = { viewModel.onSearchLocationRowClicked() },
+                    onItemClicked = {
+                        viewModel.onSearchLocationRowClicked()
+                        viewModel.updateFavoriteState(viewModelFavorites.fetchFavorite(it))
+                    },
                     onWeatherInfoEmptyButtonClick = { viewModel.onWeatherInfoEmptyButtonClick() },
                     onDismissBottomSheetRequest = { viewModel.onDismissBottomSheetRequest() }
                 )
@@ -187,7 +189,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillParentMaxWidth(currentFraction),
                             icon = { Icon(
                                 modifier = Modifier.size(28.dp),
-                                painter = painterResource(id = item.icon),
+                                imageVector = item.icon,
                                 contentDescription = item.title,
                                 tint = MaterialTheme.colorScheme.secondary
                             ) },

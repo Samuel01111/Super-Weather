@@ -16,7 +16,7 @@ fun DialogError(
     title: String,
     message: String,
     textConfirmButton: String,
-    onDismissDialog: () -> Unit,
+    onDismissDialog: () -> Unit = {},
 ) {
     //Center the title and message
     AlertDialog(

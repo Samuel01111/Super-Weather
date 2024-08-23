@@ -11,7 +11,7 @@
 
     <string name="settings_screen_title">Settings Screen</string>
     <string name="splash_screen_content_description">Logo Splash Screen</string>
-    <string name="weather_screen_title">Weathers Screen</string>
+    <string name="weather_screen_title">Recent</string>
     <string name="weather_screen_subtitle">Working in progress</string>
 
     <string name="error_exception_not_found">City or state not found!</string>
@@ -34,8 +34,10 @@
     <string name="weather_details_condition_wind">Wind</string>
 
 
-    <string name="common_ok">Ok</string>
+    <string name="common_ok">OK</string>
     <string name="common_undo">Undo</string>
     <string name="common_refresh">Refresh items</string>
     <string name="item_deleted_information">Are you sure you want to delete this item?</string>
+    <string name="weather_search_for_more">Search to see weathers here!</string>
+    <string name="clear_icon_content_description">Button to clear the text</string>
 </resources>

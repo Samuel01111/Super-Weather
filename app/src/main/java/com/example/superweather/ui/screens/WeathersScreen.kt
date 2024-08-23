@@ -9,7 +9,6 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,14 +35,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.superweather.ui.screens.components.InformationComponent
 import com.example.superweather.ui.screens.components.LoadingComponent
 import com.example.superweather.ui.screens.components.WeatherRow
+import com.example.superweather.ui.screens.utils.loadProgress
 import com.leumas.superweather.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,36 +53,42 @@ fun WeathersScreen(
     favoriteState: FavoriteState,
     weatherState: WeatherState,
     isOpenedBottomSheet: Boolean,
-    onItemClicked: () -> Unit,
-    onRemoveItemClicked: (List<WeatherRowViewEntity>) -> Unit,
-    onRefresh: () -> Unit,
-    onWeatherInfoEmptyButtonClick: () -> Unit,
-    onDismissBottomSheetRequest: () -> Unit,
+    onItemClicked: (WeatherRowViewEntity) -> Unit = {},
+    onRemoveItemClicked: (List<WeatherRowViewEntity>) -> Unit = {},
+    onRefresh: () -> Unit = {},
+    onWeatherInfoEmptyButtonClick: () -> Unit = {},
+    onDismissBottomSheetRequest: () -> Unit = {},
 ) {
     var isUndoDialogVisible by remember { mutableStateOf(false) }
-    var currentProgress by remember { mutableFloatStateOf(0f) }
-    var loading by remember { mutableStateOf(false) }
+    var isEmptyTitleVisible by remember { mutableStateOf(false) }
+    var currentProgress = remember { mutableFloatStateOf(0.00f) }
+    var progressJob: Job? by remember { mutableStateOf(null) }
 
     val scope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
     val deletedRows = remember { mutableStateListOf<WeatherRowViewEntity>() }
 
-    //WAIT for 5 seconds and then hide the dialog and delete the items
     LaunchedEffect(isUndoDialogVisible) {
-        loading = true
-        CoroutineScope(Dispatchers.IO).launch {
-            loadProgress { progress ->
-                currentProgress = progress
+        progressJob?.cancel()
+
+        progressJob = scope.launch {
+            loadProgress(isUndoDialogVisible) { progress ->
+                currentProgress.floatValue = progress
             }
-            currentProgress = 100f
-            loading = false
-            isUndoDialogVisible = false
-            onRemoveItemClicked(deletedRows)
+            if (isUndoDialogVisible && currentProgress.floatValue >= 1f) {
+                onRemoveItemClicked(deletedRows.toList())
+                onRefresh()
+                isUndoDialogVisible = false
+            }
         }
     }
 
     LaunchedEffect(true) {
         onRefresh()
+    }
+
+    LaunchedEffect(favoriteState) {
+        isEmptyTitleVisible = favoriteState.weatherRows.isEmpty()
     }
 
     Box(
@@ -92,36 +99,71 @@ fun WeathersScreen(
         if (favoriteState.isLoading) {
             LoadingComponent()
         } else {
-            LazyColumn(
-                state = lazyListState,
-                contentPadding = PaddingValues(8.dp),
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+            Column(
+                modifier = Modifier.padding(16.dp)
             ) {
-                items(
-                    items = favoriteState.weatherRows,
-                ) { row ->
-                    AnimatedVisibility(
-                        visible = !deletedRows.contains(row),
-                        enter = expandVertically(),
-                        exit = shrinkVertically(
-                            animationSpec = tween(
-                                durationMillis = 1000,
+                Text(
+                    text = stringResource(id = R.string.weather_screen_title),
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    textAlign = TextAlign.Center,
+                    fontSize = 28.sp
+                )
+
+                AnimatedVisibility(
+                    visible = isEmptyTitleVisible,
+                    enter = expandVertically(
+                        animationSpec = tween(
+                            durationMillis = 1000,
+                        )
+                    ),
+                    exit = shrinkVertically(
+                        animationSpec = tween(
+                            durationMillis = 1000,
+                        )
+                    )
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.weather_search_for_more),
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White,
+                        modifier = Modifier.padding(),
+                        textAlign = TextAlign.Center,
+                        fontSize = 14.sp
+                    )
+                }
+
+                LazyColumn(
+                    state = lazyListState,
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(
+                        items = favoriteState.weatherRows,
+                    ) { row ->
+                        AnimatedVisibility(
+                            visible = !deletedRows.contains(row),
+                            enter = expandVertically(),
+                            exit = shrinkVertically(
+                                animationSpec = tween(
+                                    durationMillis = 1000,
+                                )
                             )
-                        )
-                    ) {
-                        WeatherRow(
-                            viewEntity = row,
-                            onItemClicked = {
-                                onItemClicked()
-                            },
-                            onFavoriteClicked = {
-                                deletedRows.add(row)
-                                isUndoDialogVisible = true
-                            },
-                            isFavoriteFlow = true
-                        )
+                        ) {
+                            WeatherRow(
+                                viewEntity = row,
+                                onItemClicked = {
+                                    onItemClicked(row)
+                                },
+                                onFavoriteClicked = {
+                                    deletedRows.add(row)
+                                    isUndoDialogVisible = true
+                                },
+                                isFavoriteFlow = true
+                            )
+                        }
                     }
                 }
             }
@@ -137,12 +179,12 @@ fun WeathersScreen(
                 visible = isUndoDialogVisible,
                 enter = expandHorizontally(
                     animationSpec = tween(
-                        durationMillis = 1000,
+                        durationMillis = 500,
                     )
                 ),
                 exit = shrinkHorizontally(
                     animationSpec = tween(
-                        durationMillis = 1000,
+                        durationMillis = 500,
                     )
                 )
             ) {
@@ -157,14 +199,14 @@ fun WeathersScreen(
                         },
                         buttonText = stringResource(id = R.string.common_undo)
                     )
-                    if (loading) {
-                        LinearProgressIndicator(
-                            progress = { currentProgress },
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-                            color = Color.Green,
-                            trackColor = Color.White,
-                        )
-                    }
+                    LinearProgressIndicator(
+                        progress = { currentProgress.floatValue },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 26.dp),
+                        color = Color.White,
+                        trackColor = Color.Green,
+                    )
                 }
             }
 
@@ -191,12 +233,5 @@ fun WeathersScreen(
                 onWeatherInfoEmptyButtonClick()
             }
         }
-    }
-}
-
-suspend fun loadProgress(updateProgress: (Float) -> Unit) {
-    for (i in 1..100) {
-        updateProgress(i.toFloat() / 100)
-        delay(100)
     }
 }

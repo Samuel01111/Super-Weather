@@ -24,7 +24,9 @@ import com.example.superweather.ui.theme.BlueGood
 import com.leumas.superweather.R
 
 @Composable
-fun RequestLocationScreen(onRequestLocalizationPermissionClicked: () -> Unit) {
+fun RequestLocationScreen(
+    onRequestLocalizationPermissionClicked: () -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

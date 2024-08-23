@@ -3,6 +3,7 @@ package com.example.superweather.ui.screens
 import androidx.compose.ui.graphics.Color
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.example.superweather.data.models.Weather
+import java.util.Date
 
 data class WeatherState(
     val weatherInfo: Weather,
@@ -25,7 +26,8 @@ data class WeatherRowViewEntity(
     val location: String,
     val temperature: String,
     val icon: LottieCompositionSpec.RawRes,
-    val backgroundColor: Color
+    val backgroundColor: Color,
+    val date: Date
 )
 
 data class WeatherDetailsViewEntity(

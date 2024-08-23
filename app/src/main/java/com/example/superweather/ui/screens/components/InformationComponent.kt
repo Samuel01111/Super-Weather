@@ -33,7 +33,7 @@ fun InformationComponent(
     modifier: Modifier = Modifier,
     message: String,
     icon: ImageVector,
-    onClickButton: () -> Unit,
+    onClickButton: () -> Unit = {},
     buttonText: String
 ) {
     Box(
