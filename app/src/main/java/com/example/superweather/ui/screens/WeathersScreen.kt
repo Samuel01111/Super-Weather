@@ -9,9 +9,11 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -43,6 +45,7 @@ import com.example.superweather.ui.screens.components.InformationComponent
 import com.example.superweather.ui.screens.components.LoadingComponent
 import com.example.superweather.ui.screens.components.WeatherRow
 import com.example.superweather.ui.screens.utils.loadProgress
+import com.leumas.superweather.BuildConfig
 import com.leumas.superweather.R
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -102,14 +105,39 @@ fun WeathersScreen(
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {
-                Text(
-                    text = stringResource(id = R.string.weather_screen_title),
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    textAlign = TextAlign.Center,
-                    fontSize = 28.sp
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.weather_screen_title),
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        fontSize = 28.sp
+                    )
+                    Column(
+                        modifier = Modifier
+                            .wrapContentSize(),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Version Code: ${BuildConfig.VERSION_CODE}",
+                            fontWeight = FontWeight.Medium,
+                            color = Color.LightGray,
+                            fontSize = 12.sp
+                        )
+
+                        Text(
+                            text = "Version Name: ${BuildConfig.VERSION_NAME}",
+                            fontWeight = FontWeight.Medium,
+                            color = Color.LightGray,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
 
                 AnimatedVisibility(
                     visible = isEmptyTitleVisible,
@@ -213,6 +241,7 @@ fun WeathersScreen(
             Button(
                 modifier = Modifier
                     .padding(bottom = 16.dp),
+
                 onClick = {
                     onRefresh()
                 }
